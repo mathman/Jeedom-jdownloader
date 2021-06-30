@@ -1,3 +1,7 @@
-# Plugin template
+# Plugin jdownloader
 
-La documentation pour utiliser le template de plugin se trouve [ici](https://doc.jeedom.com/fr_FR/dev/)
+## Utilisation :
+
+Vous devez avoir un compte sur https://my.jdownloader.org/ avec vos instances correctement liées.
+
+Dans la page de configuration du plugin vous devez rentrer vos identifiants my.jdownloader.

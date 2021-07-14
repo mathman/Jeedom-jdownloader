@@ -26,20 +26,19 @@ class jdownloader extends eqLogic {
   /*
    * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
    * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-	public static $_widgetPossibility = array();
+    public static $_widgetPossibility = array();
    */
     
     /*     * ***********************Methode static*************************** */
     
     public static function pull() {
-		foreach (self::byType('jdownloader') as $eqLogic) {
-			$eqLogic->updateDeviceInfos();
-		}
-	}
+        foreach (self::byType('jdownloader') as $eqLogic) {
+            $eqLogic->updateDeviceInfos();
+        }
+    }
 
     public static function syncEqLogicWithJdownloader() {
-        
-		$j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
         $devices = $j->enumerateDevices();
         $devices = json_decode($devices, true);
         $j->disconnect();
@@ -58,510 +57,735 @@ class jdownloader extends eqLogic {
                 $newEqLogic->setLogicalId($device['id']);
                 $newEqLogic->save();
             }
-            $refresh = $newEqLogic->getCmd(null, 'refresh');
-            if (!is_object($refresh)) {
-                $refresh = new jdownloaderCmd();
-            }
-            $refresh->setName('Rafraichir');
-            $refresh->setEqLogic_id($newEqLogic->getId());
-            $refresh->setLogicalId('refresh');
-            $refresh->setType('action');
-            $refresh->setSubType('other');
-            $refresh->setOrder(0);
-            $refresh->save();
-            
-            $version = $newEqLogic->getCmd(null, "version");
-            if (!is_object($version)) {
-                $version = new jdownloaderCmd();
-            }
-            $version->setName("Version");
-            $version->setEqLogic_id($newEqLogic->getId());
-            $version->setLogicalId("version");
-            $version->setType('info');
-            $version->setSubType('string');
-            $version->setOrder(1);
-            $version->save();
-            
-            $javaVersion = $newEqLogic->getCmd(null, "javaVersion");
-            if (!is_object($javaVersion)) {
-                $javaVersion = new jdownloaderCmd();
-            }
-            $javaVersion->setName("Version Java");
-            $javaVersion->setEqLogic_id($newEqLogic->getId());
-            $javaVersion->setLogicalId("javaVersion");
-            $javaVersion->setType('info');
-            $javaVersion->setSubType('string');
-            $javaVersion->setOrder(2);
-            $javaVersion->save();
-            
-            $startupTime = $newEqLogic->getCmd(null, "startupTime");
-            if (!is_object($startupTime)) {
-                $startupTime = new jdownloaderCmd();
-            }
-            $startupTime->setName("Dernier redémarrage");
-            $startupTime->setEqLogic_id($newEqLogic->getId());
-            $startupTime->setLogicalId("startupTime");
-            $startupTime->setType('info');
-            $startupTime->setSubType('string');
-            $startupTime->setOrder(3);
-            $startupTime->save();
-            
-            $packageCollectorNb = $newEqLogic->getCmd(null, "packageCollectorNb");
-            if (!is_object($packageCollectorNb)) {
-                $packageCollectorNb = new jdownloaderCmd();
-            }
-            $packageCollectorNb->setName("Nombre de paquets en attente");
-			$packageCollectorNb->setEqLogic_id($newEqLogic->getId());
-			$packageCollectorNb->setLogicalId("packageCollectorNb");
-			$packageCollectorNb->setType('info');
-            $packageCollectorNb->setSubType('numeric');
-            $packageCollectorNb->setTemplate('dashboard', 'line');
-            $packageCollectorNb->setTemplate('mobile', 'line');
-            $packageCollectorNb->setOrder(4);
-            $packageCollectorNb->save();
-            
-            $linkCollectorNb = $newEqLogic->getCmd(null, "linkCollectorNb");
-            if (!is_object($linkCollectorNb)) {
-                $linkCollectorNb = new jdownloaderCmd();
-            }
-            $linkCollectorNb->setName("Nombre de liens en attente");
-			$linkCollectorNb->setEqLogic_id($newEqLogic->getId());
-			$linkCollectorNb->setLogicalId("linkCollectorNb");
-			$linkCollectorNb->setType('info');
-            $linkCollectorNb->setSubType('numeric');
-            $linkCollectorNb->setTemplate('dashboard', 'line');
-            $linkCollectorNb->setTemplate('mobile', 'line');
-            $linkCollectorNb->setOrder(5);
-            $linkCollectorNb->save();
-            
-            $packageDownloadNb = $newEqLogic->getCmd(null, "packageDownloadNb");
-            if (!is_object($packageDownloadNb)) {
-                $packageDownloadNb = new jdownloaderCmd();
-            }
-            $packageDownloadNb->setName("Nombre de paquets en téléchargement");
-			$packageDownloadNb->setEqLogic_id($newEqLogic->getId());
-			$packageDownloadNb->setLogicalId("packageDownloadNb");
-			$packageDownloadNb->setType('info');
-            $packageDownloadNb->setSubType('numeric');
-            $packageDownloadNb->setTemplate('dashboard', 'line');
-            $packageDownloadNb->setTemplate('mobile', 'line');
-            $packageDownloadNb->setOrder(6);
-            $packageDownloadNb->save();
-            
-            $linkDownloadNb = $newEqLogic->getCmd(null, "linkDownloadNb");
-            if (!is_object($linkDownloadNb)) {
-                $linkDownloadNb = new jdownloaderCmd();
-            }
-            $linkDownloadNb->setName("Nombre de liens en téléchargement");
-			$linkDownloadNb->setEqLogic_id($newEqLogic->getId());
-			$linkDownloadNb->setLogicalId("linkDownloadNb");
-			$linkDownloadNb->setType('info');
-            $linkDownloadNb->setSubType('numeric');
-            $linkDownloadNb->setTemplate('dashboard', 'line');
-            $linkDownloadNb->setTemplate('mobile', 'line');
-            $linkDownloadNb->setOrder(7);
-            $linkDownloadNb->save();
-            
-            $totalSpeed = $newEqLogic->getCmd(null, "totalSpeed");
-            if (!is_object($totalSpeed)) {
-                $totalSpeed = new jdownloaderCmd();
-            }
-            $totalSpeed->setName("Vitesse totale");
-			$totalSpeed->setEqLogic_id($newEqLogic->getId());
-			$totalSpeed->setLogicalId("totalSpeed");
-			$totalSpeed->setType('info');
-            $totalSpeed->setSubType('numeric');
-            $totalSpeed->setUnite("ko/s");
-            $totalSpeed->setTemplate('dashboard', 'line');
-            $totalSpeed->setTemplate('mobile', 'line');
-            $totalSpeed->setOrder(8);
-            $totalSpeed->save();
-            
-            $package = $newEqLogic->getCmd(null,'package');
-            if (!is_object($package)) {
-                $package = new jdownloaderCmd();
-            }
-            $package->setName("Paquet");
-            $package->setEqLogic_id($newEqLogic->getId());
-            $package->setLogicalId("package");
-            $package->setType('info');
-            $package->setSubType('string');
-            $package->setIsVisible(0);
-            $package->setOrder(9);
-            $package->save();
-            
-            $packageList = $newEqLogic->getCmd(null,'packageList');
-            if (!is_object($packageList)) {
-                $packageList = new jdownloaderCmd();
-            }
-            $packageList->setName("Liste paquets");
-            $packageList->setEqLogic_id($newEqLogic->getId());
-            $packageList->setLogicalId("packageList");
-            $packageList->setType('action');
-            $packageList->setSubType('select');
-            $packageList->setValue($newEqLogic->getCmd(null,'package')->getId());
-            $packageList->setOrder(10);
-            $packageList->save();
-            
-            /* *****Commandes package***** */
-            $enabledPackage = $newEqLogic->getCmd(null,'enabledPackage');
-            if (!is_object($enabledPackage)) {
-                $enabledPackage = new jdownloaderCmd();
-            }
-            $enabledPackage->setName("Paquet activé");
-            $enabledPackage->setEqLogic_id($newEqLogic->getId());
-            $enabledPackage->setLogicalId("enabledPackage");
-            $enabledPackage->setType('info');
-            $enabledPackage->setSubType('binary');
-            $enabledPackage->setTemplate('dashboard', 'line');
-            $enabledPackage->setTemplate('mobile', 'line');
-            $enabledPackage->setOrder(11);
-            $enabledPackage->save();
-
-            $bytesTotalPackage = $newEqLogic->getCmd(null,'bytesTotalPackage');
-            if (!is_object($bytesTotalPackage)) {
-                $bytesTotalPackage = new jdownloaderCmd();
-            }
-            $bytesTotalPackage->setName("Taille totale du paquet");
-            $bytesTotalPackage->setEqLogic_id($newEqLogic->getId());
-            $bytesTotalPackage->setLogicalId("bytesTotalPackage");
-            $bytesTotalPackage->setType('info');
-            $bytesTotalPackage->setSubType('numeric');
-            $bytesTotalPackage->setUnite("MB");
-            $bytesTotalPackage->setTemplate('dashboard', 'line');
-            $bytesTotalPackage->setTemplate('mobile', 'line');
-            $bytesTotalPackage->setOrder(12);
-            $bytesTotalPackage->save();
-            
-            $bytesLoadedPackage = $newEqLogic->getCmd(null,'bytesLoadedPackage');
-            if (!is_object($bytesLoadedPackage)) {
-                $bytesLoadedPackage = new jdownloaderCmd();
-            }
-            $bytesLoadedPackage->setName("Données téléchargé du paquet");
-            $bytesLoadedPackage->setEqLogic_id($newEqLogic->getId());
-            $bytesLoadedPackage->setLogicalId("bytesLoadedPackage");
-            $bytesLoadedPackage->setType('info');
-            $bytesLoadedPackage->setSubType('numeric');
-            $bytesLoadedPackage->setUnite("MB");
-            $bytesLoadedPackage->setTemplate('dashboard', 'line');
-            $bytesLoadedPackage->setTemplate('mobile', 'line');
-            $bytesLoadedPackage->setOrder(13);
-            $bytesLoadedPackage->save();
-            
-            $progressPackage = $newEqLogic->getCmd(null,'progressPackage');
-            if (!is_object($progressPackage)) {
-                $progressPackage = new jdownloaderCmd();
-            }
-            $progressPackage->setName("Progression du paquet");
-            $progressPackage->setEqLogic_id($newEqLogic->getId());
-            $progressPackage->setLogicalId("progressPackage");
-            $progressPackage->setType('info');
-            $progressPackage->setSubType('numeric');
-            $progressPackage->setUnite("%");
-            $progressPackage->setTemplate('dashboard', 'line');
-            $progressPackage->setTemplate('mobile', 'line');
-            $progressPackage->setOrder(14);
-            $progressPackage->save();
-            
-            $saveToPackage = $newEqLogic->getCmd(null,'saveToPackage');
-            if (!is_object($saveToPackage)) {
-                $saveToPackage = new jdownloaderCmd();
-            }
-            $saveToPackage->setName("Dossier de téléchargement");
-            $saveToPackage->setEqLogic_id($newEqLogic->getId());
-            $saveToPackage->setLogicalId("saveToPackage");
-            $saveToPackage->setType('info');
-            $saveToPackage->setSubType('string');
-            $saveToPackage->setOrder(15);
-            $saveToPackage->save();
-            
-            $hostsPackage = $newEqLogic->getCmd(null,'hostsPackage');
-            if (!is_object($hostsPackage)) {
-                $hostsPackage = new jdownloaderCmd();
-            }
-            $hostsPackage->setName("Hébergeurs du paquet");
-            $hostsPackage->setEqLogic_id($newEqLogic->getId());
-            $hostsPackage->setLogicalId("hostsPackage");
-            $hostsPackage->setType('info');
-            $hostsPackage->setSubType('string');
-            $hostsPackage->setOrder(16);
-            $hostsPackage->save();
-            
-            $childCountPackage = $newEqLogic->getCmd(null,'childCountPackage');
-            if (!is_object($childCountPackage)) {
-                $childCountPackage = new jdownloaderCmd();
-            }
-            $childCountPackage->setName("Nombre de liens");
-            $childCountPackage->setEqLogic_id($newEqLogic->getId());
-            $childCountPackage->setLogicalId("childCountPackage");
-            $childCountPackage->setType('info');
-            $childCountPackage->setSubType('numeric');
-            $childCountPackage->setTemplate('dashboard', 'line');
-            $childCountPackage->setTemplate('mobile', 'line');
-            $childCountPackage->setOrder(17);
-            $childCountPackage->save();
-            
-            $onlineCountPackage = $newEqLogic->getCmd(null,'onlineCountPackage');
-            if (!is_object($onlineCountPackage)) {
-                $onlineCountPackage = new jdownloaderCmd();
-            }
-            $onlineCountPackage->setName("Liens en ligne");
-            $onlineCountPackage->setEqLogic_id($newEqLogic->getId());
-            $onlineCountPackage->setLogicalId("onlineCountPackage");
-            $onlineCountPackage->setType('info');
-            $onlineCountPackage->setSubType('numeric');
-            $onlineCountPackage->setTemplate('dashboard', 'line');
-            $onlineCountPackage->setTemplate('mobile', 'line');
-            $onlineCountPackage->setOrder(18);
-            $onlineCountPackage->save();
-            
-            $offlineCountPackage = $newEqLogic->getCmd(null,'offlineCountPackage');
-            if (!is_object($offlineCountPackage)) {
-                $offlineCountPackage = new jdownloaderCmd();
-            }
-            $offlineCountPackage->setName("Liens hors ligne");
-            $offlineCountPackage->setEqLogic_id($newEqLogic->getId());
-            $offlineCountPackage->setLogicalId("offlineCountPackage");
-            $offlineCountPackage->setType('info');
-            $offlineCountPackage->setSubType('numeric');
-            $offlineCountPackage->setTemplate('dashboard', 'line');
-            $offlineCountPackage->setTemplate('mobile', 'line');
-            $offlineCountPackage->setOrder(19);
-            $offlineCountPackage->save();
-            
-            $unknownCountPackage = $newEqLogic->getCmd(null,'unknownCountPackage');
-            if (!is_object($unknownCountPackage)) {
-                $unknownCountPackage = new jdownloaderCmd();
-            }
-            $unknownCountPackage->setName("Liens inconnus");
-            $unknownCountPackage->setEqLogic_id($newEqLogic->getId());
-            $unknownCountPackage->setLogicalId("unknownCountPackage");
-            $unknownCountPackage->setType('info');
-            $unknownCountPackage->setSubType('numeric');
-            $unknownCountPackage->setTemplate('dashboard', 'line');
-            $unknownCountPackage->setTemplate('mobile', 'line');
-            $unknownCountPackage->setOrder(20);
-            $unknownCountPackage->save();
-            
-            $speedPackage = $newEqLogic->getCmd(null,'speedPackage');
-            if (!is_object($speedPackage)) {
-                $speedPackage = new jdownloaderCmd();
-            }
-            $speedPackage->setName("Vitesse paquet");
-            $speedPackage->setEqLogic_id($newEqLogic->getId());
-            $speedPackage->setLogicalId("speedPackage");
-            $speedPackage->setType('info');
-            $speedPackage->setSubType('numeric');
-            $speedPackage->setUnite("ko/s");
-            $speedPackage->setTemplate('dashboard', 'line');
-            $speedPackage->setTemplate('mobile', 'line');
-            $speedPackage->setOrder(21);
-            $speedPackage->save();
-            
-            $statusPackage = $newEqLogic->getCmd(null,'statusPackage');
-            if (!is_object($statusPackage)) {
-                $statusPackage= new jdownloaderCmd();
-            }
-            $statusPackage->setName("Status paquet");
-            $statusPackage->setEqLogic_id($newEqLogic->getId());
-            $statusPackage->setLogicalId("statusPackage");
-            $statusPackage->setType('info');
-            $statusPackage->setSubType('string');
-            $statusPackage->setOrder(22);
-            $statusPackage->save();
-            
-            $runningPackage = $newEqLogic->getCmd(null,'runningPackage');
-            if (!is_object($runningPackage)) {
-                $runningPackage = new jdownloaderCmd();
-            }
-            $runningPackage->setName("Paquet en téléchargement");
-            $runningPackage->setEqLogic_id($newEqLogic->getId());
-            $runningPackage->setLogicalId("runningPackage");
-            $runningPackage->setType('info');
-            $runningPackage->setSubType('binary');
-            $runningPackage->setTemplate('dashboard', 'line');
-            $runningPackage->setTemplate('mobile', 'line');
-            $runningPackage->setOrder(23);
-            $runningPackage->save();
-            
-            $linkPackage = $newEqLogic->getCmd(null,'linkPackage');
-            if (!is_object($linkPackage)) {
-                $linkPackage = new jdownloaderCmd();
-            }
-            $linkPackage->setName("Lien");
-            $linkPackage->setEqLogic_id($newEqLogic->getId());
-            $linkPackage->setLogicalId("linkPackage");
-            $linkPackage->setType('info');
-            $linkPackage->setSubType('string');
-            $linkPackage->setIsVisible(0);
-            $linkPackage->setOrder(24);
-            $linkPackage->save();
-            
-            $linkListPackage = $newEqLogic->getCmd(null,'linkListPackage');
-            if (!is_object($linkListPackage)) {
-                $linkListPackage = new jdownloaderCmd();
-            }
-            $linkListPackage->setName("Liste liens");
-            $linkListPackage->setEqLogic_id($newEqLogic->getId());
-            $linkListPackage->setLogicalId("linkListPackage");
-            $linkListPackage->setType('action');
-            $linkListPackage->setSubType('select');
-            $linkListPackage->setValue($newEqLogic->getCmd(null,'linkPackage')->getId());
-            $linkListPackage->setOrder(25);
-            $linkListPackage->save();
-
-            /* *****Commandes links***** */
-            $enabledLink = $newEqLogic->getCmd(null,'enabledLink');
-            if (!is_object($enabledLink)) {
-                $enabledLink = new jdownloaderCmd();
-            }
-            $enabledLink->setName("Lien activé");
-            $enabledLink->setEqLogic_id($newEqLogic->getId());
-            $enabledLink->setLogicalId("enabledLink");
-            $enabledLink->setType('info');
-            $enabledLink->setSubType('binary');
-            $enabledLink->setTemplate('dashboard', 'line');
-            $enabledLink->setTemplate('mobile', 'line');
-            $enabledLink->setOrder(26);
-            $enabledLink->save();
-			
-			$addedDateLink = $newEqLogic->getCmd(null,'addedDateLink');
-            if (!is_object($addedDateLink)) {
-                $addedDateLink = new jdownloaderCmd();
-            }
-            $addedDateLink->setName("Date d'ajout");
-            $addedDateLink->setEqLogic_id($newEqLogic->getId());
-            $addedDateLink->setLogicalId("addedDateLink");
-            $addedDateLink->setType('info');
-            $addedDateLink->setSubType('string');
-            $addedDateLink->setOrder(27);
-            $addedDateLink->save();
-			
-			$bytesTotalLink = $newEqLogic->getCmd(null,'bytesTotalLink');
-            if (!is_object($bytesTotalLink)) {
-                $bytesTotalLink = new jdownloaderCmd();
-            }
-            $bytesTotalLink->setName("Taille totale du lien");
-            $bytesTotalLink->setEqLogic_id($newEqLogic->getId());
-            $bytesTotalLink->setLogicalId("bytesTotalLink");
-            $bytesTotalLink->setType('info');
-            $bytesTotalLink->setSubType('numeric');
-            $bytesTotalLink->setUnite("MB");
-            $bytesTotalLink->setTemplate('dashboard', 'line');
-            $bytesTotalLink->setTemplate('mobile', 'line');
-            $bytesTotalLink->setOrder(28);
-            $bytesTotalLink->save();
-            
-            $bytesLoadedLink = $newEqLogic->getCmd(null,'bytesLoadedLink');
-            if (!is_object($bytesLoadedLink)) {
-                $bytesLoadedLink = new jdownloaderCmd();
-            }
-            $bytesLoadedLink->setName("Données téléchargé du lien");
-            $bytesLoadedLink->setEqLogic_id($newEqLogic->getId());
-            $bytesLoadedLink->setLogicalId("bytesLoadedLink");
-            $bytesLoadedLink->setType('info');
-            $bytesLoadedLink->setSubType('numeric');
-            $bytesLoadedLink->setUnite("MB");
-            $bytesLoadedLink->setTemplate('dashboard', 'line');
-            $bytesLoadedLink->setTemplate('mobile', 'line');
-            $bytesLoadedLink->setOrder(29);
-            $bytesLoadedLink->save();
-            
-            $progressLink = $newEqLogic->getCmd(null,'progressLink');
-            if (!is_object($progressLink)) {
-                $progressLink = new jdownloaderCmd();
-            }
-            $progressLink->setName("Progression du lien");
-            $progressLink->setEqLogic_id($newEqLogic->getId());
-            $progressLink->setLogicalId("progressLink");
-            $progressLink->setType('info');
-            $progressLink->setSubType('numeric');
-            $progressLink->setUnite("%");
-            $progressLink->setTemplate('dashboard', 'line');
-            $progressLink->setTemplate('mobile', 'line');
-            $progressLink->setOrder(30);
-            $progressLink->save();
-			
-			$hostLink = $newEqLogic->getCmd(null,'hostLink');
-            if (!is_object($hostLink)) {
-                $hostLink = new jdownloaderCmd();
-            }
-            $hostLink->setName("Hébergeur du lien");
-            $hostLink->setEqLogic_id($newEqLogic->getId());
-            $hostLink->setLogicalId("hostLink");
-            $hostLink->setType('info');
-            $hostLink->setSubType('string');
-            $hostLink->setOrder(31);
-            $hostLink->save();
-			
-			$urlLink = $newEqLogic->getCmd(null,'urlLink');
-            if (!is_object($urlLink)) {
-                $urlLink = new jdownloaderCmd();
-            }
-            $urlLink->setName("URL du lien");
-            $urlLink->setEqLogic_id($newEqLogic->getId());
-            $urlLink->setLogicalId("urlLink");
-            $urlLink->setType('info');
-            $urlLink->setSubType('string');
-            $urlLink->setOrder(32);
-            $urlLink->save();
-			
-			$availabilityLink = $newEqLogic->getCmd(null,'availabilityLink');
-            if (!is_object($availabilityLink)) {
-                $availabilityLink = new jdownloaderCmd();
-            }
-            $availabilityLink->setName("Disponibilité du lien");
-            $availabilityLink->setEqLogic_id($newEqLogic->getId());
-            $availabilityLink->setLogicalId("availabilityLink");
-            $availabilityLink->setType('info');
-            $availabilityLink->setSubType('string');
-            $availabilityLink->setOrder(33);
-            $availabilityLink->save();
-			
-			$speedLink = $newEqLogic->getCmd(null,'speedLink');
-            if (!is_object($speedLink)) {
-                $speedLink = new jdownloaderCmd();
-            }
-            $speedLink->setName("Vitesse lien");
-            $speedLink->setEqLogic_id($newEqLogic->getId());
-            $speedLink->setLogicalId("speedLink");
-            $speedLink->setType('info');
-            $speedLink->setSubType('numeric');
-            $speedLink->setUnite("ko/s");
-            $speedLink->setTemplate('dashboard', 'line');
-            $speedLink->setTemplate('mobile', 'line');
-            $speedLink->setOrder(34);
-            $speedLink->save();
-            
-            $statusLink = $newEqLogic->getCmd(null,'statusLink');
-            if (!is_object($statusLink)) {
-                $statusLink= new jdownloaderCmd();
-            }
-            $statusLink->setName("Status lien");
-            $statusLink->setEqLogic_id($newEqLogic->getId());
-            $statusLink->setLogicalId("statusLink");
-            $statusLink->setType('info');
-            $statusLink->setSubType('string');
-            $statusLink->setOrder(35);
-            $statusLink->save();
-            
-            $runningLink = $newEqLogic->getCmd(null,'runningLink');
-            if (!is_object($runningLink)) {
-                $runningLink = new jdownloaderCmd();
-            }
-            $runningLink->setName("Lien en téléchargement");
-            $runningLink->setEqLogic_id($newEqLogic->getId());
-            $runningLink->setLogicalId("runningLink");
-            $runningLink->setType('info');
-            $runningLink->setSubType('binary');
-            $runningLink->setTemplate('dashboard', 'line');
-            $runningLink->setTemplate('mobile', 'line');
-            $runningLink->setOrder(36);
-            $runningLink->save();
+            $newEqLogic->updateCmds();
         }
     }
 
     /*     * *********************Méthodes d'instance************************* */
+    
+    function updateCmds() {
+        $refresh = $this->getCmd(null, 'refresh');
+        if (!is_object($refresh)) {
+            $refresh = new jdownloaderCmd();
+        }
+        $refresh->setName('Rafraichir');
+        $refresh->setEqLogic_id($this->getId());
+        $refresh->setLogicalId('refresh');
+        $refresh->setType('action');
+        $refresh->setSubType('other');
+        $refresh->setOrder(0);
+        $refresh->save();
+            
+        $version = $this->getCmd(null, "version");
+        if (!is_object($version)) {
+            $version = new jdownloaderCmd();
+        }
+        $version->setName("Version");
+        $version->setEqLogic_id($this->getId());
+        $version->setLogicalId("version");
+        $version->setType('info');
+        $version->setSubType('string');
+        $version->setOrder(1);
+        $version->save();
+            
+        $javaVersion = $this->getCmd(null, "javaVersion");
+        if (!is_object($javaVersion)) {
+            $javaVersion = new jdownloaderCmd();
+        }
+        $javaVersion->setName("Version Java");
+        $javaVersion->setEqLogic_id($this->getId());
+        $javaVersion->setLogicalId("javaVersion");
+        $javaVersion->setType('info');
+        $javaVersion->setSubType('string');
+        $javaVersion->setOrder(2);
+        $javaVersion->save();
+        
+        $startupTime = $this->getCmd(null, "startupTime");
+        if (!is_object($startupTime)) {
+            $startupTime = new jdownloaderCmd();
+        }
+        $startupTime->setName("Dernier redémarrage");
+        $startupTime->setEqLogic_id($this->getId());
+        $startupTime->setLogicalId("startupTime");
+        $startupTime->setType('info');
+        $startupTime->setSubType('string');
+        $startupTime->setOrder(3);
+        $startupTime->save();
+        
+        $restart = $this->getCmd(null,'restart');
+        if (!is_object($restart)) {
+            $restart = new hyperionCmd();
+        }
+        $restart->setName("Redémarrer");
+        $restart->setEqLogic_id($this->getId());
+        $restart->setLogicalId("restart");
+        $restart->setType('action');
+        $restart->setSubType('other');
+        $restart->setOrder(4);
+        $restart->setConfiguration('actionConfirm', '1');
+        $restart->setDisplay('icon', '<i class="fas fa-sync"></i>');
+        $restart->setDisplay('showIconAndNamedashboard', '1');
+        $restart->setDisplay('showIconAndNamemobile', '1');
+        $restart->save();
+        
+        $packageCollectorNb = $this->getCmd(null, "packageCollectorNb");
+        if (!is_object($packageCollectorNb)) {
+            $packageCollectorNb = new jdownloaderCmd();
+        }
+        $packageCollectorNb->setName("Nombre de paquets en attente");
+        $packageCollectorNb->setEqLogic_id($this->getId());
+        $packageCollectorNb->setLogicalId("packageCollectorNb");
+        $packageCollectorNb->setType('info');
+        $packageCollectorNb->setSubType('numeric');
+        $packageCollectorNb->setTemplate('dashboard', 'line');
+        $packageCollectorNb->setTemplate('mobile', 'line');
+        $packageCollectorNb->setOrder(5);
+        $packageCollectorNb->save();
+        
+        $linkCollectorNb = $this->getCmd(null, "linkCollectorNb");
+        if (!is_object($linkCollectorNb)) {
+            $linkCollectorNb = new jdownloaderCmd();
+        }
+        $linkCollectorNb->setName("Nombre de liens en attente");
+        $linkCollectorNb->setEqLogic_id($this->getId());
+        $linkCollectorNb->setLogicalId("linkCollectorNb");
+        $linkCollectorNb->setType('info');
+        $linkCollectorNb->setSubType('numeric');
+        $linkCollectorNb->setTemplate('dashboard', 'line');
+        $linkCollectorNb->setTemplate('mobile', 'line');
+        $linkCollectorNb->setOrder(6);
+        $linkCollectorNb->save();
+        
+        $packageDownloadNb = $this->getCmd(null, "packageDownloadNb");
+        if (!is_object($packageDownloadNb)) {
+            $packageDownloadNb = new jdownloaderCmd();
+        }
+        $packageDownloadNb->setName("Nombre de paquets en téléchargement");
+        $packageDownloadNb->setEqLogic_id($this->getId());
+        $packageDownloadNb->setLogicalId("packageDownloadNb");
+        $packageDownloadNb->setType('info');
+        $packageDownloadNb->setSubType('numeric');
+        $packageDownloadNb->setTemplate('dashboard', 'line');
+        $packageDownloadNb->setTemplate('mobile', 'line');
+        $packageDownloadNb->setOrder(7);
+        $packageDownloadNb->save();
+        
+        $linkDownloadNb = $this->getCmd(null, "linkDownloadNb");
+        if (!is_object($linkDownloadNb)) {
+            $linkDownloadNb = new jdownloaderCmd();
+        }
+        $linkDownloadNb->setName("Nombre de liens en téléchargement");
+        $linkDownloadNb->setEqLogic_id($this->getId());
+        $linkDownloadNb->setLogicalId("linkDownloadNb");
+        $linkDownloadNb->setType('info');
+        $linkDownloadNb->setSubType('numeric');
+        $linkDownloadNb->setTemplate('dashboard', 'line');
+        $linkDownloadNb->setTemplate('mobile', 'line');
+        $linkDownloadNb->setOrder(8);
+        $linkDownloadNb->save();
+        
+        $totalSpeed = $this->getCmd(null, "totalSpeed");
+        if (!is_object($totalSpeed)) {
+            $totalSpeed = new jdownloaderCmd();
+        }
+        $totalSpeed->setName("Vitesse totale");
+        $totalSpeed->setEqLogic_id($this->getId());
+        $totalSpeed->setLogicalId("totalSpeed");
+        $totalSpeed->setType('info');
+        $totalSpeed->setSubType('numeric');
+        $totalSpeed->setUnite("ko/s");
+        $totalSpeed->setTemplate('dashboard', 'line');
+        $totalSpeed->setTemplate('mobile', 'line');
+        $totalSpeed->setOrder(9);
+        $totalSpeed->save();
+
+        $start = $this->getCmd(null,'start');
+        if (!is_object($start)) {
+            $start = new hyperionCmd();
+        }
+        $start->setName("Démarrer téléchargements");
+        $start->setEqLogic_id($this->getId());
+        $start->setLogicalId("start");
+        $start->setType('action');
+        $start->setSubType('other');
+        $start->setOrder(10);
+        $start->setDisplay('icon', '<i class="fas fa-play"></i>');
+        $start->setDisplay('showIconAndNamedashboard', '1');
+        $start->setDisplay('showIconAndNamemobile', '1');
+        $start->save();
+        
+        $stop = $this->getCmd(null,'stop');
+        if (!is_object($stop)) {
+            $stop = new hyperionCmd();
+        }
+        $stop->setName("Arrêter téléchargements");
+        $stop->setEqLogic_id($this->getId());
+        $stop->setLogicalId("stop");
+        $stop->setType('action');
+        $stop->setSubType('other');
+        $stop->setOrder(11);
+        $stop->setDisplay('icon', '<i class="fas fa-stop"></i>');
+        $stop->setDisplay('showIconAndNamedashboard', '1');
+        $stop->setDisplay('showIconAndNamemobile', '1');
+        $stop->save();
+        
+        $pause = $this->getCmd(null,'pause');
+        if (!is_object($pause)) {
+            $pause = new hyperionCmd();
+        }
+        $pause->setName("Mettre en pause");
+        $pause->setEqLogic_id($this->getId());
+        $pause->setLogicalId("pause");
+        $pause->setType('action');
+        $pause->setSubType('other');
+        $pause->setOrder(12);
+        $pause->setDisplay('icon', '<i class="fas fa-pause"></i>');
+        $pause->setDisplay('showIconAndNamedashboard', '1');
+        $pause->setDisplay('showIconAndNamemobile', '1');
+        $pause->save();
+        
+        $package = $this->getCmd(null,'package');
+        if (!is_object($package)) {
+            $package = new jdownloaderCmd();
+        }
+        $package->setName("Paquet");
+        $package->setEqLogic_id($this->getId());
+        $package->setLogicalId("package");
+        $package->setType('info');
+        $package->setSubType('string');
+        $package->setIsVisible(0);
+        $package->setOrder(13);
+        $package->save();
+        
+        $packageList = $this->getCmd(null,'packageList');
+        if (!is_object($packageList)) {
+            $packageList = new jdownloaderCmd();
+        }
+        $packageList->setName("Liste paquets");
+        $packageList->setEqLogic_id($this->getId());
+        $packageList->setLogicalId("packageList");
+        $packageList->setType('action');
+        $packageList->setSubType('select');
+        $packageList->setValue($this->getCmd(null,'package')->getId());
+        $packageList->setOrder(14);
+        $packageList->save();
+        
+        /* *****Commandes package***** */
+        $enabledPackage = $this->getCmd(null,'enabledPackage');
+        if (!is_object($enabledPackage)) {
+            $enabledPackage = new jdownloaderCmd();
+        }
+        $enabledPackage->setName("Paquet activé");
+        $enabledPackage->setEqLogic_id($this->getId());
+        $enabledPackage->setLogicalId("enabledPackage");
+        $enabledPackage->setType('info');
+        $enabledPackage->setSubType('binary');
+        $enabledPackage->setTemplate('dashboard', 'line');
+        $enabledPackage->setTemplate('mobile', 'line');
+        $enabledPackage->setOrder(15);
+        $enabledPackage->save();
+        
+        $enablePackage = $this->getCmd(null,'enablePackage');
+        if (!is_object($enablePackage)) {
+            $enablePackage = new jdownloaderCmd();
+        }
+        $enablePackage->setName("Activer paquet");
+        $enablePackage->setEqLogic_id($this->getId());
+        $enablePackage->setLogicalId("enablePackage");
+        $enablePackage->setType('action');
+        $enablePackage->setSubType('other');
+        $enablePackage->setDisplay('icon', '<i class="fas fa-check"></i>');
+        $enablePackage->setDisplay('showIconAndNamedashboard', '1');
+        $enablePackage->setDisplay('showIconAndNamemobile', '1');
+        $enablePackage->setOrder(16);
+        $enablePackage->save();
+        
+        $disablePackage = $this->getCmd(null,'disablePackage');
+        if (!is_object($disablePackage)) {
+            $disablePackage = new jdownloaderCmd();
+        }
+        $disablePackage->setName("Désactiver paquet");
+        $disablePackage->setEqLogic_id($this->getId());
+        $disablePackage->setLogicalId("disablePackage");
+        $disablePackage->setType('action');
+        $disablePackage->setSubType('other');
+        $disablePackage->setDisplay('icon', '<i class="fas fa-times"></i>');
+        $disablePackage->setDisplay('showIconAndNamedashboard', '1');
+        $disablePackage->setDisplay('showIconAndNamemobile', '1');
+        $disablePackage->setOrder(17);
+        $disablePackage->save();
+
+        $bytesTotalPackage = $this->getCmd(null,'bytesTotalPackage');
+        if (!is_object($bytesTotalPackage)) {
+            $bytesTotalPackage = new jdownloaderCmd();
+        }
+        $bytesTotalPackage->setName("Taille totale du paquet");
+        $bytesTotalPackage->setEqLogic_id($this->getId());
+        $bytesTotalPackage->setLogicalId("bytesTotalPackage");
+        $bytesTotalPackage->setType('info');
+        $bytesTotalPackage->setSubType('numeric');
+        $bytesTotalPackage->setUnite("MB");
+        $bytesTotalPackage->setTemplate('dashboard', 'line');
+        $bytesTotalPackage->setTemplate('mobile', 'line');
+        $bytesTotalPackage->setOrder(18);
+        $bytesTotalPackage->save();
+        
+        $bytesLoadedPackage = $this->getCmd(null,'bytesLoadedPackage');
+        if (!is_object($bytesLoadedPackage)) {
+            $bytesLoadedPackage = new jdownloaderCmd();
+        }
+        $bytesLoadedPackage->setName("Données téléchargé du paquet");
+        $bytesLoadedPackage->setEqLogic_id($this->getId());
+        $bytesLoadedPackage->setLogicalId("bytesLoadedPackage");
+        $bytesLoadedPackage->setType('info');
+        $bytesLoadedPackage->setSubType('numeric');
+        $bytesLoadedPackage->setUnite("MB");
+        $bytesLoadedPackage->setTemplate('dashboard', 'line');
+        $bytesLoadedPackage->setTemplate('mobile', 'line');
+        $bytesLoadedPackage->setOrder(19);
+        $bytesLoadedPackage->save();
+        
+        $progressPackage = $this->getCmd(null,'progressPackage');
+        if (!is_object($progressPackage)) {
+            $progressPackage = new jdownloaderCmd();
+        }
+        $progressPackage->setName("Progression du paquet");
+        $progressPackage->setEqLogic_id($this->getId());
+        $progressPackage->setLogicalId("progressPackage");
+        $progressPackage->setType('info');
+        $progressPackage->setSubType('numeric');
+        $progressPackage->setUnite("%");
+        $progressPackage->setTemplate('dashboard', 'line');
+        $progressPackage->setTemplate('mobile', 'line');
+        $progressPackage->setOrder(20);
+        $progressPackage->save();
+        
+        $saveToPackage = $this->getCmd(null,'saveToPackage');
+        if (!is_object($saveToPackage)) {
+            $saveToPackage = new jdownloaderCmd();
+        }
+        $saveToPackage->setName("Dossier de téléchargement");
+        $saveToPackage->setEqLogic_id($this->getId());
+        $saveToPackage->setLogicalId("saveToPackage");
+        $saveToPackage->setType('info');
+        $saveToPackage->setSubType('string');
+        $saveToPackage->setOrder(21);
+        $saveToPackage->save();
+        
+        $hostsPackage = $this->getCmd(null,'hostsPackage');
+        if (!is_object($hostsPackage)) {
+            $hostsPackage = new jdownloaderCmd();
+        }
+        $hostsPackage->setName("Hébergeurs du paquet");
+        $hostsPackage->setEqLogic_id($this->getId());
+        $hostsPackage->setLogicalId("hostsPackage");
+        $hostsPackage->setType('info');
+        $hostsPackage->setSubType('string');
+        $hostsPackage->setOrder(22);
+        $hostsPackage->save();
+        
+        $childCountPackage = $this->getCmd(null,'childCountPackage');
+        if (!is_object($childCountPackage)) {
+            $childCountPackage = new jdownloaderCmd();
+        }
+        $childCountPackage->setName("Nombre de liens");
+        $childCountPackage->setEqLogic_id($this->getId());
+        $childCountPackage->setLogicalId("childCountPackage");
+        $childCountPackage->setType('info');
+        $childCountPackage->setSubType('numeric');
+        $childCountPackage->setTemplate('dashboard', 'line');
+        $childCountPackage->setTemplate('mobile', 'line');
+        $childCountPackage->setOrder(23);
+        $childCountPackage->save();
+        
+        $onlineCountPackage = $this->getCmd(null,'onlineCountPackage');
+        if (!is_object($onlineCountPackage)) {
+            $onlineCountPackage = new jdownloaderCmd();
+        }
+        $onlineCountPackage->setName("Liens en ligne");
+        $onlineCountPackage->setEqLogic_id($this->getId());
+        $onlineCountPackage->setLogicalId("onlineCountPackage");
+        $onlineCountPackage->setType('info');
+        $onlineCountPackage->setSubType('numeric');
+        $onlineCountPackage->setTemplate('dashboard', 'line');
+        $onlineCountPackage->setTemplate('mobile', 'line');
+        $onlineCountPackage->setOrder(24);
+        $onlineCountPackage->save();
+        
+        $offlineCountPackage = $this->getCmd(null,'offlineCountPackage');
+        if (!is_object($offlineCountPackage)) {
+            $offlineCountPackage = new jdownloaderCmd();
+        }
+        $offlineCountPackage->setName("Liens hors ligne");
+        $offlineCountPackage->setEqLogic_id($this->getId());
+        $offlineCountPackage->setLogicalId("offlineCountPackage");
+        $offlineCountPackage->setType('info');
+        $offlineCountPackage->setSubType('numeric');
+        $offlineCountPackage->setTemplate('dashboard', 'line');
+        $offlineCountPackage->setTemplate('mobile', 'line');
+        $offlineCountPackage->setOrder(25);
+        $offlineCountPackage->save();
+        
+        $unknownCountPackage = $this->getCmd(null,'unknownCountPackage');
+        if (!is_object($unknownCountPackage)) {
+            $unknownCountPackage = new jdownloaderCmd();
+        }
+        $unknownCountPackage->setName("Liens inconnus");
+        $unknownCountPackage->setEqLogic_id($this->getId());
+        $unknownCountPackage->setLogicalId("unknownCountPackage");
+        $unknownCountPackage->setType('info');
+        $unknownCountPackage->setSubType('numeric');
+        $unknownCountPackage->setTemplate('dashboard', 'line');
+        $unknownCountPackage->setTemplate('mobile', 'line');
+        $unknownCountPackage->setOrder(26);
+        $unknownCountPackage->save();
+        
+        $speedPackage = $this->getCmd(null,'speedPackage');
+        if (!is_object($speedPackage)) {
+            $speedPackage = new jdownloaderCmd();
+        }
+        $speedPackage->setName("Vitesse paquet");
+        $speedPackage->setEqLogic_id($this->getId());
+        $speedPackage->setLogicalId("speedPackage");
+        $speedPackage->setType('info');
+        $speedPackage->setSubType('numeric');
+        $speedPackage->setUnite("ko/s");
+        $speedPackage->setTemplate('dashboard', 'line');
+        $speedPackage->setTemplate('mobile', 'line');
+        $speedPackage->setOrder(27);
+        $speedPackage->save();
+        
+        $statusPackage = $this->getCmd(null,'statusPackage');
+        if (!is_object($statusPackage)) {
+            $statusPackage= new jdownloaderCmd();
+        }
+        $statusPackage->setName("Status paquet");
+        $statusPackage->setEqLogic_id($this->getId());
+        $statusPackage->setLogicalId("statusPackage");
+        $statusPackage->setType('info');
+        $statusPackage->setSubType('string');
+        $statusPackage->setOrder(28);
+        $statusPackage->save();
+        
+        $runningPackage = $this->getCmd(null,'runningPackage');
+        if (!is_object($runningPackage)) {
+            $runningPackage = new jdownloaderCmd();
+        }
+        $runningPackage->setName("Paquet en téléchargement");
+        $runningPackage->setEqLogic_id($this->getId());
+        $runningPackage->setLogicalId("runningPackage");
+        $runningPackage->setType('info');
+        $runningPackage->setSubType('binary');
+        $runningPackage->setTemplate('dashboard', 'line');
+        $runningPackage->setTemplate('mobile', 'line');
+        $runningPackage->setOrder(29);
+        $runningPackage->save();
+        
+        $forceDownloadPackage = $this->getCmd(null,'forceDownloadPackage');
+        if (!is_object($forceDownloadPackage)) {
+            $forceDownloadPackage = new jdownloaderCmd();
+        }
+        $forceDownloadPackage->setName("Forcer téléchargement paquet");
+        $forceDownloadPackage->setEqLogic_id($this->getId());
+        $forceDownloadPackage->setLogicalId("forceDownloadPackage");
+        $forceDownloadPackage->setType('action');
+        $forceDownloadPackage->setSubType('other');
+        $forceDownloadPackage->setDisplay('icon', '<i class="fas fa-play"></i>');
+        $forceDownloadPackage->setDisplay('showIconAndNamedashboard', '1');
+        $forceDownloadPackage->setDisplay('showIconAndNamemobile', '1');
+        $forceDownloadPackage->setDisplay('forceReturnLineAfter', '1');
+        $forceDownloadPackage->setOrder(30);
+        $forceDownloadPackage->save();
+        
+        $moveToDownloadListPackage = $this->getCmd(null,'moveToDownloadListPackage');
+        if (!is_object($moveToDownloadListPackage)) {
+            $moveToDownloadListPackage = new jdownloaderCmd();
+        }
+        $moveToDownloadListPackage->setName("Ajouter paquet en téléchargement");
+        $moveToDownloadListPackage->setEqLogic_id($this->getId());
+        $moveToDownloadListPackage->setLogicalId("moveToDownloadListPackage");
+        $moveToDownloadListPackage->setType('action');
+        $moveToDownloadListPackage->setSubType('other');
+        $moveToDownloadListPackage->setConfiguration('actionConfirm', '1');
+        $moveToDownloadListPackage->setDisplay('icon', '<i class="fas fa-play"></i>');
+        $moveToDownloadListPackage->setDisplay('showIconAndNamedashboard', '1');
+        $moveToDownloadListPackage->setDisplay('showIconAndNamemobile', '1');
+        $moveToDownloadListPackage->setDisplay('forceReturnLineAfter', '1');
+        $moveToDownloadListPackage->setOrder(31);
+        $moveToDownloadListPackage->save();
+        
+        $removePackage = $this->getCmd(null,'removePackage');
+        if (!is_object($removePackage)) {
+            $removePackage = new jdownloaderCmd();
+        }
+        $removePackage->setName("Supprimer paquet");
+        $removePackage->setEqLogic_id($this->getId());
+        $removePackage->setLogicalId("removePackage");
+        $removePackage->setType('action');
+        $removePackage->setSubType('other');
+        $removePackage->setConfiguration('actionConfirm', '1');
+        $removePackage->setDisplay('icon', '<i class="fas fa-trash-alt"></i>');
+        $removePackage->setDisplay('showIconAndNamedashboard', '1');
+        $removePackage->setDisplay('showIconAndNamemobile', '1');
+        $removePackage->setDisplay('forceReturnLineAfter', '1');
+        $removePackage->setOrder(32);
+        $removePackage->save();
+        
+        $linkPackage = $this->getCmd(null,'linkPackage');
+        if (!is_object($linkPackage)) {
+            $linkPackage = new jdownloaderCmd();
+        }
+        $linkPackage->setName("Lien");
+        $linkPackage->setEqLogic_id($this->getId());
+        $linkPackage->setLogicalId("linkPackage");
+        $linkPackage->setType('info');
+        $linkPackage->setSubType('string');
+        $linkPackage->setIsVisible(0);
+        $linkPackage->setOrder(33);
+        $linkPackage->save();
+        
+        $linkListPackage = $this->getCmd(null,'linkListPackage');
+        if (!is_object($linkListPackage)) {
+            $linkListPackage = new jdownloaderCmd();
+        }
+        $linkListPackage->setName("Liste liens");
+        $linkListPackage->setEqLogic_id($this->getId());
+        $linkListPackage->setLogicalId("linkListPackage");
+        $linkListPackage->setType('action');
+        $linkListPackage->setSubType('select');
+        $linkListPackage->setValue($this->getCmd(null,'linkPackage')->getId());
+        $linkListPackage->setOrder(34);
+        $linkListPackage->save();
+
+        /* *****Commandes links***** */
+        $enabledLink = $this->getCmd(null,'enabledLink');
+        if (!is_object($enabledLink)) {
+            $enabledLink = new jdownloaderCmd();
+        }
+        $enabledLink->setName("Lien activé");
+        $enabledLink->setEqLogic_id($this->getId());
+        $enabledLink->setLogicalId("enabledLink");
+        $enabledLink->setType('info');
+        $enabledLink->setSubType('binary');
+        $enabledLink->setTemplate('dashboard', 'line');
+        $enabledLink->setTemplate('mobile', 'line');
+        $enabledLink->setOrder(35);
+        $enabledLink->save();
+        
+        $enableLink = $this->getCmd(null,'enableLink');
+        if (!is_object($enableLink)) {
+            $enableLink = new jdownloaderCmd();
+        }
+        $enableLink->setName("Activer lien");
+        $enableLink->setEqLogic_id($this->getId());
+        $enableLink->setLogicalId("enableLink");
+        $enableLink->setType('action');
+        $enableLink->setSubType('other');
+        $enableLink->setDisplay('icon', '<i class="fas fa-check"></i>');
+        $enableLink->setDisplay('showIconAndNamedashboard', '1');
+        $enableLink->setDisplay('showIconAndNamemobile', '1');
+        $enableLink->setOrder(36);
+        $enableLink->save();
+        
+        $disableLink = $this->getCmd(null,'disableLink');
+        if (!is_object($disableLink)) {
+            $disableLink = new jdownloaderCmd();
+        }
+        $disableLink->setName("Désactiver lien");
+        $disableLink->setEqLogic_id($this->getId());
+        $disableLink->setLogicalId("disableLink");
+        $disableLink->setType('action');
+        $disableLink->setSubType('other');
+        $disableLink->setDisplay('icon', '<i class="fas fa-times"></i>');
+        $disableLink->setDisplay('showIconAndNamedashboard', '1');
+        $disableLink->setDisplay('showIconAndNamemobile', '1');
+        $disableLink->setOrder(37);
+        $disableLink->save();
+        
+        $addedDateLink = $this->getCmd(null,'addedDateLink');
+        if (!is_object($addedDateLink)) {
+            $addedDateLink = new jdownloaderCmd();
+        }
+        $addedDateLink->setName("Date d'ajout");
+        $addedDateLink->setEqLogic_id($this->getId());
+        $addedDateLink->setLogicalId("addedDateLink");
+        $addedDateLink->setType('info');
+        $addedDateLink->setSubType('string');
+        $addedDateLink->setOrder(38);
+        $addedDateLink->save();
+        
+        $bytesTotalLink = $this->getCmd(null,'bytesTotalLink');
+        if (!is_object($bytesTotalLink)) {
+            $bytesTotalLink = new jdownloaderCmd();
+        }
+        $bytesTotalLink->setName("Taille totale du lien");
+        $bytesTotalLink->setEqLogic_id($this->getId());
+        $bytesTotalLink->setLogicalId("bytesTotalLink");
+        $bytesTotalLink->setType('info');
+        $bytesTotalLink->setSubType('numeric');
+        $bytesTotalLink->setUnite("MB");
+        $bytesTotalLink->setTemplate('dashboard', 'line');
+        $bytesTotalLink->setTemplate('mobile', 'line');
+        $bytesTotalLink->setOrder(39);
+        $bytesTotalLink->save();
+        
+        $bytesLoadedLink = $this->getCmd(null,'bytesLoadedLink');
+        if (!is_object($bytesLoadedLink)) {
+            $bytesLoadedLink = new jdownloaderCmd();
+        }
+        $bytesLoadedLink->setName("Données téléchargé du lien");
+        $bytesLoadedLink->setEqLogic_id($this->getId());
+        $bytesLoadedLink->setLogicalId("bytesLoadedLink");
+        $bytesLoadedLink->setType('info');
+        $bytesLoadedLink->setSubType('numeric');
+        $bytesLoadedLink->setUnite("MB");
+        $bytesLoadedLink->setTemplate('dashboard', 'line');
+        $bytesLoadedLink->setTemplate('mobile', 'line');
+        $bytesLoadedLink->setOrder(40);
+        $bytesLoadedLink->save();
+        
+        $progressLink = $this->getCmd(null,'progressLink');
+        if (!is_object($progressLink)) {
+            $progressLink = new jdownloaderCmd();
+        }
+        $progressLink->setName("Progression du lien");
+        $progressLink->setEqLogic_id($this->getId());
+        $progressLink->setLogicalId("progressLink");
+        $progressLink->setType('info');
+        $progressLink->setSubType('numeric');
+        $progressLink->setUnite("%");
+        $progressLink->setTemplate('dashboard', 'line');
+        $progressLink->setTemplate('mobile', 'line');
+        $progressLink->setOrder(41);
+        $progressLink->save();
+        
+        $hostLink = $this->getCmd(null,'hostLink');
+        if (!is_object($hostLink)) {
+            $hostLink = new jdownloaderCmd();
+        }
+        $hostLink->setName("Hébergeur du lien");
+        $hostLink->setEqLogic_id($this->getId());
+        $hostLink->setLogicalId("hostLink");
+        $hostLink->setType('info');
+        $hostLink->setSubType('string');
+        $hostLink->setOrder(42);
+        $hostLink->save();
+        
+        $urlLink = $this->getCmd(null,'urlLink');
+        if (!is_object($urlLink)) {
+            $urlLink = new jdownloaderCmd();
+        }
+        $urlLink->setName("URL du lien");
+        $urlLink->setEqLogic_id($this->getId());
+        $urlLink->setLogicalId("urlLink");
+        $urlLink->setType('info');
+        $urlLink->setSubType('string');
+        $urlLink->setOrder(43);
+        $urlLink->save();
+        
+        $availabilityLink = $this->getCmd(null,'availabilityLink');
+        if (!is_object($availabilityLink)) {
+            $availabilityLink = new jdownloaderCmd();
+        }
+        $availabilityLink->setName("Disponibilité du lien");
+        $availabilityLink->setEqLogic_id($this->getId());
+        $availabilityLink->setLogicalId("availabilityLink");
+        $availabilityLink->setType('info');
+        $availabilityLink->setSubType('string');
+        $availabilityLink->setOrder(44);
+        $availabilityLink->save();
+        
+        $speedLink = $this->getCmd(null,'speedLink');
+        if (!is_object($speedLink)) {
+            $speedLink = new jdownloaderCmd();
+        }
+        $speedLink->setName("Vitesse lien");
+        $speedLink->setEqLogic_id($this->getId());
+        $speedLink->setLogicalId("speedLink");
+        $speedLink->setType('info');
+        $speedLink->setSubType('numeric');
+        $speedLink->setUnite("ko/s");
+        $speedLink->setTemplate('dashboard', 'line');
+        $speedLink->setTemplate('mobile', 'line');
+        $speedLink->setOrder(45);
+        $speedLink->save();
+        
+        $statusLink = $this->getCmd(null,'statusLink');
+        if (!is_object($statusLink)) {
+            $statusLink= new jdownloaderCmd();
+        }
+        $statusLink->setName("Status lien");
+        $statusLink->setEqLogic_id($this->getId());
+        $statusLink->setLogicalId("statusLink");
+        $statusLink->setType('info');
+        $statusLink->setSubType('string');
+        $statusLink->setOrder(46);
+        $statusLink->save();
+        
+        $runningLink = $this->getCmd(null,'runningLink');
+        if (!is_object($runningLink)) {
+            $runningLink = new jdownloaderCmd();
+        }
+        $runningLink->setName("Lien en téléchargement");
+        $runningLink->setEqLogic_id($this->getId());
+        $runningLink->setLogicalId("runningLink");
+        $runningLink->setType('info');
+        $runningLink->setSubType('binary');
+        $runningLink->setTemplate('dashboard', 'line');
+        $runningLink->setTemplate('mobile', 'line');
+        $runningLink->setOrder(47);
+        $runningLink->save();
+        
+        $forceDownloadLink = $this->getCmd(null,'forceDownloadLink');
+        if (!is_object($forceDownloadLink)) {
+            $forceDownloadLink = new jdownloaderCmd();
+        }
+        $forceDownloadLink->setName("Forcer téléchargement lien");
+        $forceDownloadLink->setEqLogic_id($this->getId());
+        $forceDownloadLink->setLogicalId("forceDownloadLink");
+        $forceDownloadLink->setType('action');
+        $forceDownloadLink->setSubType('other');
+        $forceDownloadLink->setDisplay('icon', '<i class="fas fa-play"></i>');
+        $forceDownloadLink->setDisplay('showIconAndNamedashboard', '1');
+        $forceDownloadLink->setDisplay('showIconAndNamemobile', '1');
+        $forceDownloadLink->setDisplay('forceReturnLineAfter', '1');
+        $forceDownloadLink->setOrder(48);
+        $forceDownloadLink->save();
+        
+        $moveToDownloadListLink = $this->getCmd(null,'moveToDownloadListLink');
+        if (!is_object($moveToDownloadListLink)) {
+            $moveToDownloadListLink = new jdownloaderCmd();
+        }
+        $moveToDownloadListLink->setName("Ajouter lien en téléchargement");
+        $moveToDownloadListLink->setEqLogic_id($this->getId());
+        $moveToDownloadListLink->setLogicalId("moveToDownloadListLink");
+        $moveToDownloadListLink->setType('action');
+        $moveToDownloadListLink->setSubType('other');
+        $moveToDownloadListLink->setConfiguration('actionConfirm', '1');
+        $moveToDownloadListLink->setDisplay('icon', '<i class="fas fa-play"></i>');
+        $moveToDownloadListLink->setDisplay('showIconAndNamedashboard', '1');
+        $moveToDownloadListLink->setDisplay('showIconAndNamemobile', '1');
+        $moveToDownloadListLink->setDisplay('forceReturnLineAfter', '1');
+        $moveToDownloadListLink->setOrder(49);
+        $moveToDownloadListLink->save();
+        
+        $removeLink = $this->getCmd(null,'removeLink');
+        if (!is_object($removeLink)) {
+            $removeLink = new jdownloaderCmd();
+        }
+        $removeLink->setName("Supprimer lien");
+        $removeLink->setEqLogic_id($this->getId());
+        $removeLink->setLogicalId("removeLink");
+        $removeLink->setType('action');
+        $removeLink->setSubType('other');
+        $removeLink->setConfiguration('actionConfirm', '1');
+        $removeLink->setDisplay('icon', '<i class="fas fa-trash-alt"></i>');
+        $removeLink->setDisplay('showIconAndNamedashboard', '1');
+        $removeLink->setDisplay('showIconAndNamemobile', '1');
+        $removeLink->setDisplay('forceReturnLineAfter', '1');
+        $removeLink->setOrder(50);
+        $removeLink->save();
+    }
     
     function getAllFromJdownloader() {
         $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
@@ -633,38 +857,262 @@ class jdownloader extends eqLogic {
         return array();
     }
     
-    function updatePackageCmd($packageDatas, $cmdId) {
+    function start() {
+        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+        $start = $j->start($this->getLogicalId());
+        $j->disconnect();
+        log::add('jdownloader', 'debug', print_r($start, true));
+        return $start;
+    }
+    
+    function stop() {
+        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+        $stop = $j->stop($this->getLogicalId());
+        $j->disconnect();
+        log::add('jdownloader', 'debug', print_r($stop, true));
+        return $stop;
+    }
+    
+    function pause() {
+        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+        $pause = $j->pause($this->getLogicalId());
+        $j->disconnect();
+        log::add('jdownloader', 'debug', print_r($pause, true));
+        return $pause;
+    }
+    
+    function restart() {
+        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+        $restart = $j->restart($this->getLogicalId());
+        $j->disconnect();
+        log::add('jdownloader', 'debug', print_r($restart, true));
+        return $restart;
+    }
+    
+    function setEnablePackage($value) {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                if ($packageInfosArray[1] == 'download') {
+                    $enable = $j->setEnableFromDownloads($this->getLogicalId(), array($value, null, array($packageInfosArray[0])));
+                }
+                else if ($packageInfosArray[1] == 'collector') {
+                    $enable = $j->setEnableFromCollector($this->getLogicalId(), array($value, null, array($packageInfosArray[0])));
+                }
+                $j->disconnect();
+                log::add('jdownloader', 'debug', print_r($enable, true));
+                return $enable;
+            }
+        }
+        return null;
+    }
+    
+    function forceDownloadPackage() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                if ($packageInfosArray[1] == 'download') {
+                    $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                    $download = $j->forceDownload($this->getLogicalId(), array(null, array($packageInfosArray[0])));
+                    $j->disconnect();
+                    log::add('jdownloader', 'debug', print_r($download, true));
+                    return $download;
+                }
+            }
+        }
+        return null;
+    }
+    
+    function moveToDownloadListPackage() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                if ($packageInfosArray[1] == 'collector') {
+                    $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                    $download = $j->moveToDownloadlist($this->getLogicalId(), array(null, array($packageInfosArray[0])));
+                    $j->disconnect();
+                    log::add('jdownloader', 'debug', print_r($download, true));
+                    return $download;
+                }
+            }
+        }
+        return null;
+    }
+    
+    function removePackage() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                if ($packageInfosArray[1] == 'download') {
+                    $remove = $j->removeFromDownloads($this->getLogicalId(), array(null, array($packageInfosArray[0])));
+                }
+                else if ($packageInfosArray[1] == 'collector') {
+                    $remove = $j->removeFromCollector($this->getLogicalId(), array(null, array($packageInfosArray[0])));
+                }
+                $j->disconnect();
+                log::add('jdownloader', 'debug', print_r($remove, true));
+                return $remove;
+            }
+        }
+        return null;
+    }
+    
+    function setEnableLink($value) {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                $linkPackage = $this->getCmd(null,'linkPackage');
+                if (is_object($linkPackage)) {
+                    $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                    if ($packageInfosArray[1] == 'download') {
+                        $enable = $j->setEnableFromDownloads($this->getLogicalId(), array($value, array($linkPackage->execCmd()), null));
+                    }
+                    else if ($packageInfosArray[1] == 'collector') {
+                        $enable = $j->setEnableFromCollector($this->getLogicalId(), array($value, array($linkPackage->execCmd()), null));
+                    }
+                    $j->disconnect();
+                    log::add('jdownloader', 'debug', print_r($enable, true));
+                    return $enable;
+                }
+            }
+        }
+        return null;
+    }
+    
+    function forceDownloadLink() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                if ($packageInfosArray[1] == 'download') {
+                    $linkPackage = $this->getCmd(null,'linkPackage');
+                    if (is_object($linkPackage)) {
+                        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                        $download = $j->forceDownload($this->getLogicalId(), array(array($linkPackage->execCmd()), null));
+                        $j->disconnect();
+                        log::add('jdownloader', 'debug', print_r($download, true));
+                        return $download;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    function moveToDownloadListLink() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                if ($packageInfosArray[1] == 'collector') {
+                    $linkPackage = $this->getCmd(null,'linkPackage');
+                    if (is_object($linkPackage)) {
+                        $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                        $download = $j->moveToDownloadlist($this->getLogicalId(), array(array($linkPackage->execCmd()), null));
+                        $j->disconnect();
+                        log::add('jdownloader', 'debug', print_r($download, true));
+                        return $download;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    function removeLink() {
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            if (count($packageInfosArray) == 2) {
+                $linkPackage = $this->getCmd(null,'linkPackage');
+                if (is_object($linkPackage)) {
+                    $j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+                    if ($packageInfosArray[1] == 'download') {
+                        $remove = $j->removeFromDownloads($this->getLogicalId(), array(array($linkPackage->execCmd()), null));
+                    }
+                    else if ($packageInfosArray[1] == 'collector') {
+                        $remove = $j->removeFromCollector($this->getLogicalId(), array(array($linkPackage->execCmd()), null));
+                    }
+                    $j->disconnect();
+                    log::add('jdownloader', 'debug', print_r($remove, true));
+                    return $remove;
+                }
+            }
+        }
+        return null;
+    }
+    
+    function updatePackageCmd($packageDatas, $cmdId, $visible = null) {
         $cmd = $this->getCmd(null, $cmdId . 'Package');
         if (is_object($cmd)) {
-            if (array_key_exists($cmdId, $packageDatas) && !empty($packageDatas[$cmdId])) {
+            if ($visible !== null) {
+                $cmd->setIsVisible($visible);
+            }
+            else if (array_key_exists($cmdId, $packageDatas)) {
                 $cmd->setIsVisible(1);
-                $cmd->save();
+            }
+            else {
+                $cmd->setIsVisible(0);
+            }
+            $cmd->save();
+            if ($cmd->getSubType() === 'binary') {
+                if (array_key_exists($cmdId, $packageDatas)) {
+                    if ($cmd->formatValue($packageDatas[$cmdId]) != $cmd->execCmd()) {
+                        $cmd->setCollectDate('');
+                        $cmd->event($packageDatas[$cmdId]);
+                    }
+                }
+                else if ($cmd->formatValue(0) != $cmd->execCmd()) {
+                    $cmd->setCollectDate('');
+                    $cmd->event(0);
+                }
+            }
+            else if (array_key_exists($cmdId, $packageDatas)) {
                 if ($cmd->formatValue($packageDatas[$cmdId]) != $cmd->execCmd()) {
                     $cmd->setCollectDate('');
                     $cmd->event($packageDatas[$cmdId]);
                 }
             }
-            else {
-                $cmd->setIsVisible(0);
-                $cmd->save();
-            }
         }
     }
-	
-	function updateLinkCmd($linkDatas, $cmdId) {
+    
+    function updateLinkCmd($linkDatas, $cmdId, $visible = null) {
         $cmd = $this->getCmd(null, $cmdId . 'Link');
         if (is_object($cmd)) {
-            if (array_key_exists($cmdId, $linkDatas) && !empty($linkDatas[$cmdId])) {
+            if ($visible !== null) {
+                $cmd->setIsVisible($visible);
+            }
+            else if (array_key_exists($cmdId, $linkDatas)) {
                 $cmd->setIsVisible(1);
-                $cmd->save();
+            }
+            else {
+                $cmd->setIsVisible(0);
+            }
+            $cmd->save();
+            if ($cmd->getSubType() === 'binary') {
+                if (array_key_exists($cmdId, $linkDatas)) {
+                    if ($cmd->formatValue($linkDatas[$cmdId]) != $cmd->execCmd()) {
+                        $cmd->setCollectDate('');
+                        $cmd->event($linkDatas[$cmdId]);
+                    }
+                }
+                else if ($cmd->formatValue(0) != $cmd->execCmd()) {
+                    $cmd->setCollectDate('');
+                    $cmd->event(0);
+                }
+            }
+            else if (array_key_exists($cmdId, $linkDatas)) {
                 if ($cmd->formatValue($linkDatas[$cmdId]) != $cmd->execCmd()) {
                     $cmd->setCollectDate('');
                     $cmd->event($linkDatas[$cmdId]);
                 }
-            }
-            else {
-                $cmd->setIsVisible(0);
-                $cmd->save();
             }
         }
     }
@@ -732,22 +1180,52 @@ class jdownloader extends eqLogic {
         }
         $packageList = $this->getCmd(null,'packageList');
         if (is_object($packageList)) {
-            $list = "";
-            foreach ($JdownloaderDatas['packagesCollector']['data'] as $package) {
-                $list = $list . $separator . $package['uuid'] . '_collector' . '|' . $package['name'];
-                $separator = ';';
+            if (count($JdownloaderDatas['packagesCollector']['data']) > 0 || count($JdownloaderDatas['packagesDownload']['data']) > 0) {
+                $packageList->setIsVisible(1);
+                $list = "";
+                foreach ($JdownloaderDatas['packagesCollector']['data'] as $package) {
+                    $list = $list . $separator . $package['uuid'] . '_collector' . '|' . $package['name'];
+                    $separator = ';';
+                }
+                foreach ($JdownloaderDatas['packagesDownload']['data'] as $package) {
+                    $list = $list . $separator . $package['uuid'] . '_download' . '|' . $package['name'];
+                    $separator = ';';
+                }
+                $packageList->setConfiguration('listValue', $list);
             }
-            foreach ($JdownloaderDatas['packagesDownload']['data'] as $package) {
-                $list = $list . $separator . $package['uuid'] . '_download' . '|' . $package['name'];
-                $separator = ';';
+            else {
+                $packageList->setIsVisible(0);
             }
-            $packageList->setConfiguration('listValue', $list);
             $packageList->save();
         }
     }
     
     function updatePackageCmds($packageDatas, $linksDatas) {
         $this->updatePackageCmd($packageDatas, 'enabled');
+        $enabledPackage = $this->getCmd(null,'enabledPackage');
+        if (is_object($enabledPackage)) {
+            $enabled = $enabledPackage->execCmd();
+            $enablePackage = $this->getCmd(null,'enablePackage');
+            if (is_object($enablePackage)) {
+                if ($enabled || !array_key_exists('enabled', $packageDatas)) {
+                    $enablePackage->setIsVisible(0);
+                }
+                else {
+                    $enablePackage->setIsVisible(1);
+                }
+                $enablePackage->save();
+            }
+            $disablePackage = $this->getCmd(null,'disablePackage');
+            if (is_object($disablePackage)) {
+                if ($enabled) {
+                    $disablePackage->setIsVisible(1);
+                }
+                else {
+                    $disablePackage->setIsVisible(0);
+                }
+                $disablePackage->save();
+            }
+        }
         $this->updatePackageCmd($packageDatas, 'childCount');
         $bytesTotal = $this->getCmd(null,'bytesTotalPackage');
         if (is_object($bytesTotal)) {
@@ -852,12 +1330,82 @@ class jdownloader extends eqLogic {
             }
             $linkList->save();
         }
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            $forceDownloadPackage = $this->getCmd(null,'forceDownloadPackage');
+            if (is_object($forceDownloadPackage)) {
+                if (count($packageInfosArray) == 2) {
+                    $runningPackage = $this->getCmd(null,'runningPackage');
+                    if (is_object($runningPackage)) {
+                        if (($runningPackage->execCmd() != 1) && ($packageInfosArray[1] == 'download')) {
+                            $forceDownloadPackage->setIsVisible(1);
+                        }
+                        else {
+                            $forceDownloadPackage->setIsVisible(0);
+                        }
+                    }
+                }
+                else {
+                    $forceDownloadPackage->setIsVisible(0);
+                }
+                $forceDownloadPackage->save();
+            }
+            $moveToDownloadListPackage = $this->getCmd(null,'moveToDownloadListPackage');
+            if (is_object($moveToDownloadListPackage)) {
+                if (count($packageInfosArray) == 2) {
+                    if ($packageInfosArray[1] == 'download') {
+                        $moveToDownloadListPackage->setIsVisible(0);
+                    }
+                    else if ($packageInfosArray[1] == 'collector') {
+                        $moveToDownloadListPackage->setIsVisible(1);
+                    }
+                }
+                else {
+                    $moveToDownloadListPackage->setIsVisible(0);
+                }
+                $moveToDownloadListPackage->save();
+            }
+            $removePackage = $this->getCmd(null,'removePackage');
+            if (is_object($removePackage)) {
+                if (count($packageInfosArray) != 2) {
+                    $removePackage->setIsVisible(0);
+                }
+                else {
+                    $removePackage->setIsVisible(1);
+                }
+                $removePackage->save();
+            }
+        }
     }
     
     function updateLinksCmds($linkDatas) {
-        log::add('jdownloader', 'debug', print_r($linkDatas, true));
-		$this->updateLinkCmd($linkDatas, 'enabled');
-		$bytesTotal = $this->getCmd(null,'bytesTotalLink');
+        $this->updateLinkCmd($linkDatas, 'enabled');
+        $enabledLink = $this->getCmd(null,'enabledLink');
+        if (is_object($enabledLink)) {
+            $enabled = $enabledLink->execCmd();
+            $enableLink = $this->getCmd(null,'enableLink');
+            if (is_object($enableLink)) {
+                if ($enabled || !array_key_exists('enabled', $linkDatas)) {
+                    $enableLink->setIsVisible(0);
+                }
+                else {
+                    $enableLink->setIsVisible(1);
+                }
+                $enableLink->save();
+            }
+            $disableLink = $this->getCmd(null,'disableLink');
+            if (is_object($disableLink)) {
+                if ($enabled) {
+                    $disableLink->setIsVisible(1);
+                }
+                else {
+                    $disableLink->setIsVisible(0);
+                }
+                $disableLink->save();
+            }
+        }
+        $bytesTotal = $this->getCmd(null,'bytesTotalLink');
         if (is_object($bytesTotal)) {
             if (array_key_exists('bytesTotal', $linkDatas)) {
                 $bytesTotal->setIsVisible(1);
@@ -902,10 +1450,10 @@ class jdownloader extends eqLogic {
                 $progress->save();
             }
         }
-		$this->updateLinkCmd($linkDatas, 'host');
-		$this->updateLinkCmd($linkDatas, 'url');
-		$this->updateLinkCmd($linkDatas, 'availability');
-		$speedLink = $this->getCmd(null,'speedLink');
+        $this->updateLinkCmd($linkDatas, 'host');
+        $this->updateLinkCmd($linkDatas, 'url');
+        $this->updateLinkCmd($linkDatas, 'availability');
+        $speedLink = $this->getCmd(null,'speedLink');
         if (is_object($speedLink)) {
             if (array_key_exists('speed', $linkDatas)) {
                 $speedLink->setIsVisible(1);
@@ -922,19 +1470,66 @@ class jdownloader extends eqLogic {
         }
         $this->updateLinkCmd($linkDatas, 'status');
         $this->updateLinkCmd($linkDatas, 'running');
-		$addedDateLink = $this->getCmd(null, "addedDateLink");
+        $addedDateLink = $this->getCmd(null, "addedDateLink");
         if (is_object($addedDateLink)) {
-			if (array_key_exists('addedDate', $linkDatas)) {
-				$addedDateLink->setIsVisible(1);
+            if (array_key_exists('addedDate', $linkDatas)) {
+                $addedDateLink->setIsVisible(1);
                 $addedDateLink->save();
-				if ($addedDateLink->formatValue(date('d/m/Y H:i:s', ($linkDatas['addedDate']/1000))) != $addedDateLink->execCmd()) {
-					$addedDateLink->setCollectDate('');
-					$addedDateLink->event(date('d/m/Y H:i:s', ($linkDatas['addedDate']/1000)));
-				}
-			}
-			else {
+                if ($addedDateLink->formatValue(date('d/m/Y H:i:s', ($linkDatas['addedDate']/1000))) != $addedDateLink->execCmd()) {
+                    $addedDateLink->setCollectDate('');
+                    $addedDateLink->event(date('d/m/Y H:i:s', ($linkDatas['addedDate']/1000)));
+                }
+            }
+            else {
                 $addedDateLink->setIsVisible(0);
                 $addedDateLink->save();
+            }
+        }
+        $package = $this->getCmd(null,'package');
+        if (is_object($package)) {
+            $packageInfosArray = explode("_", $package->execCmd());
+            $forceDownloadLink = $this->getCmd(null,'forceDownloadLink');
+            if (is_object($forceDownloadLink)) {
+                if (count($packageInfosArray) == 2) {
+                    $runningLink = $this->getCmd(null,'runningLink');
+                    if (is_object($runningLink)) {
+                        if (($runningLink->execCmd() != 1) && ($packageInfosArray[1] == 'download')) {
+                            $forceDownloadLink->setIsVisible(1);
+                        }
+                        else {
+                            $forceDownloadLink->setIsVisible(0);
+                        }
+                    }
+                }
+                else {
+                    $forceDownloadLink->setIsVisible(0);
+                }
+                $forceDownloadLink->save();
+            }
+            $moveToDownloadListLink = $this->getCmd(null,'moveToDownloadListLink');
+            if (is_object($moveToDownloadListLink)) {
+                if (count($packageInfosArray) == 2) {
+                    if ($packageInfosArray[1] == 'download') {
+                        $moveToDownloadListLink->setIsVisible(0);
+                    }
+                    else if ($packageInfosArray[1] == 'collector') {
+                        $moveToDownloadListLink->setIsVisible(1);
+                    }
+                }
+                else {
+                    $moveToDownloadListLink->setIsVisible(0);
+                }
+                $moveToDownloadListLink->save();
+            }
+            $removeLink = $this->getCmd(null,'removeLink');
+            if (is_object($removeLink)) {
+                if (count($packageInfosArray) != 2) {
+                    $removeLink->setIsVisible(0);
+                }
+                else {
+                    $removeLink->setIsVisible(1);
+                }
+                $removeLink->save();
             }
         }
     }
@@ -967,7 +1562,6 @@ class jdownloader extends eqLogic {
                     $this->savePackageValue("");
                     $this->saveLinkValue("");
                     $this->refreshWidget();
-                    return;
                 }
             }
             $linksDatas = array();
@@ -994,7 +1588,6 @@ class jdownloader extends eqLogic {
                     else {
                         $this->saveLinkValue("");
                         $this->refreshWidget();
-                        return;
                     }
                 }
                 $this->updateLinksCmds($linkFound);
@@ -1137,20 +1730,75 @@ class jdownloaderCmd extends cmd {
         if (!is_object($eqLogic) || $eqLogic->getIsEnable() != 1) {
             throw new Exception(__('Equipement desactivé impossible d\éxecuter la commande : ' . $this->getHumanName(), __FILE__));
         }
-		log::add('jdownloader','debug','command: '.$this->getLogicalId().' parameters: '.json_encode($_options));
+        log::add('jdownloader','debug','command: '.$this->getLogicalId().' parameters: '.json_encode($_options));
         switch ($this->getLogicalId()) {
-			case "refresh":
+            case "refresh":
                 $eqLogic->updateDeviceInfos();
-				return true;
+                return true;
             case "packageList":
                 $eqLogic->updatePackageInfos($_options['select']);
                 return true;
             case "linkListPackage":
                 $eqLogic->updateLinkInfos($_options['select']);
                 return true;
+            case "start":
+                $eqLogic->start();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "stop":
+                $eqLogic->stop();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "pause":
+                $eqLogic->pause();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "restart":
+                $eqLogic->restart();
+                return true;
+            case "enablePackage":
+                $eqLogic->setEnablePackage(true);
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "disablePackage":
+                $eqLogic->setEnablePackage(false);
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "forceDownloadPackage":
+                $eqLogic->forceDownloadPackage();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "moveToDownloadListPackage":
+                $eqLogic->moveToDownloadListPackage();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "removePackage":
+                $eqLogic->removePackage();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "enableLink":
+                $eqLogic->setEnableLink(true);
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "disableLink":
+                $eqLogic->setEnableLink(false);
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "forceDownloadLink":
+                $eqLogic->forceDownloadLink();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "moveToDownloadListLink":
+                $eqLogic->moveToDownloadListLink();
+                $eqLogic->updateDeviceInfos();
+                return true;
+            case "removeLink":
+                $eqLogic->removeLink();
+                $eqLogic->updateDeviceInfos();
+                return true;
             default:
                 return false;
-		}
+        }
      }
 
     /*     * **********************Getteur Setteur*************************** */

@@ -92,6 +92,38 @@ class MYJDAPI
         return true;
     }
     
+    public function start($deviceId) {
+        $res = $this -> callAction( "/toolbar/startDownloads", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
+    
+    public function stop($deviceId) {
+        $res = $this -> callAction( "/toolbar/stopDownloads", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
+    
+    public function restart($deviceId) {
+        $res = $this -> callAction( "/system/restartJD", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
+    
+    public function pause($deviceId) {
+        $res = $this -> callAction( "/toolbar/togglePauseDownloads", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
+    
     public function getSystemInfos($deviceId) {
         $res = $this -> callAction( "/system/getSystemInfos", $deviceId);
         if( $res === false) {
@@ -191,8 +223,10 @@ class MYJDAPI
         ];
 
         $params = array_merge( $params_default, $params);
+        $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
+        $json_params = '"{'.$params.'}"';
 
-        $res = $this -> callAction( "/linkgrabberv2/queryLinks", $deviceId, $params);
+        $res = $this -> callAction( "/linkgrabberv2/queryLinks", $deviceId, $json_params);
         return $res;
     }
     
@@ -217,7 +251,10 @@ class MYJDAPI
         ];
 
         $params = array_merge( $params_default, $params);
-        $res = $this -> callAction( "/linkgrabberv2/queryPackages", $deviceId, $params);
+        $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
+        $json_params = '"{'.$params.'}"';
+        
+        $res = $this -> callAction( "/linkgrabberv2/queryPackages", $deviceId, $json_params);
         return $res;
     }
     
@@ -246,8 +283,10 @@ class MYJDAPI
         ];
 
         $params = array_merge( $params_default, $params);
-
-        $res = $this -> callAction( "/downloadsV2/queryLinks", $deviceId, $params);
+        $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
+        $json_params = '"{'.$params.'}"';
+        
+        $res = $this -> callAction( "/downloadsV2/queryLinks", $deviceId, $json_params);
         return $res;
     }
     
@@ -273,8 +312,52 @@ class MYJDAPI
         ];
 
         $params = array_merge( $params_default, $params);
-
-        $res = $this -> callAction( "/downloadsV2/queryPackages", $deviceId, $params);
+        $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
+        $json_params = '"{'.$params.'}"';
+        
+        $res = $this -> callAction( "/downloadsV2/queryPackages", $deviceId, $json_params);
+        return $res;
+    }
+    
+    public function setEnableFromDownloads($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/downloadsV2/setEnabled", $deviceId, $params);
+        return $res;
+    }
+    
+    public function setEnableFromCollector($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/linkgrabberv2/setEnabled", $deviceId, $params);
+        return $res;
+    }
+    
+    public function forceDownload($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/downloadsV2/forceDownload", $deviceId, $params);
+        return $res;
+    }
+    
+    public function moveToDownloadlist($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/linkgrabberv2/moveToDownloadlist", $deviceId, $params);
+        return $res;
+    }
+    
+    public function removeFromDownloads($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/downloadsV2/removeLinks", $deviceId, $params);
+        return $res;
+    }
+    
+    public function removeFromCollector($deviceId, $params = []) {
+        $params = substr(json_encode($params),1,-1);
+        
+        $res = $this -> callAction( "/linkgrabberv2/removeLinks", $deviceId, $params);
         return $res;
     }
     
@@ -313,13 +396,10 @@ class MYJDAPI
     // Make a call to API function on my.jdownloader.org
     // input: device_name - name of device to send action, action - action pathname, params - additional params
     // return: result from server or false
-    public function callAction( $action, $deviceId, $params = false) {
+    public function callAction( $action, $deviceId, $params = "") {
         $query = "/t_".urlencode( $this -> sessiontoken)."_".urlencode( $deviceId).$action;
-        if( $params != "") {
-            if(is_array($params)) {
-                $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
-            }
-            $json_data = '{"url":"'.$action.'","params":["{'.$params.'}"],"rid":'.$this -> getUniqueRid().',"apiVer":'.$this -> apiVer.'}';
+        if( $params !== "") {
+            $json_data = '{"url":"'.$action.'","params":['.$params.'],"rid":'.$this -> getUniqueRid().',"apiVer":'.$this -> apiVer.'}';
         } else {
             $json_data = '{"url":"'.$action.'","rid":'.$this -> getUniqueRid().',"apiVer":'.$this -> apiVer.'}';
         }

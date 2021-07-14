@@ -4,6 +4,12 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 14/07/2021
+
+- Ajout des commandes générales "Redémarrer", "Démarrer téléchargement", "Arreter téléchargement", "Mettre en pause"
+- Ajout des commandes de paquet "Activer/Desactiver Paquet", "Supprimer Paquet", "Forcer téléchargement paquet", "Ajouter paquet en téléchargement"
+- Ajout des commandes de lien "Activer/Desactiver Lien", "Supprimer Lien", "Forcer téléchargement lien", "Ajouter lien en téléchargement"
+
 # 30/06/2021
 
 - Création du plugin

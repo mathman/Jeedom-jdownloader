@@ -10,6 +10,8 @@
 - Ajout des commandes de paquet "Activer/Desactiver Paquet", "Supprimer Paquet", "Forcer téléchargement paquet", "Ajouter paquet en téléchargement"
 - Ajout des commandes de lien "Activer/Desactiver Lien", "Supprimer Lien", "Forcer téléchargement lien", "Ajouter lien en téléchargement"
 
+Cliquez sur Synchronier dans la page de gestion du plugin afin de creer les nouvelles commandes
+
 # 30/06/2021
 
 - Création du plugin

@@ -114,7 +114,7 @@ class jdownloader extends eqLogic {
         
         $restart = $this->getCmd(null,'restart');
         if (!is_object($restart)) {
-            $restart = new hyperionCmd();
+            $restart = new jdownloaderCmd();
         }
         $restart->setName("Redémarrer");
         $restart->setEqLogic_id($this->getId());
@@ -201,7 +201,7 @@ class jdownloader extends eqLogic {
 
         $start = $this->getCmd(null,'start');
         if (!is_object($start)) {
-            $start = new hyperionCmd();
+            $start = new jdownloaderCmd();
         }
         $start->setName("Démarrer téléchargements");
         $start->setEqLogic_id($this->getId());
@@ -216,7 +216,7 @@ class jdownloader extends eqLogic {
         
         $stop = $this->getCmd(null,'stop');
         if (!is_object($stop)) {
-            $stop = new hyperionCmd();
+            $stop = new jdownloaderCmd();
         }
         $stop->setName("Arrêter téléchargements");
         $stop->setEqLogic_id($this->getId());
@@ -231,7 +231,7 @@ class jdownloader extends eqLogic {
         
         $pause = $this->getCmd(null,'pause');
         if (!is_object($pause)) {
-            $pause = new hyperionCmd();
+            $pause = new jdownloaderCmd();
         }
         $pause->setName("Mettre en pause");
         $pause->setEqLogic_id($this->getId());

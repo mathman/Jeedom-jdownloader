@@ -4,6 +4,10 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 15/09/2021
+
+- Correction d'un bug lors de la création d'un équipement
+
 # 14/07/2021
 
 - Ajout des commandes générales "Redémarrer", "Démarrer téléchargement", "Arreter téléchargement", "Mettre en pause"

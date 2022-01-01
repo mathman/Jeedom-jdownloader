@@ -1216,9 +1216,9 @@ class jdownloader extends eqLogic {
         $totalSpeed = $this->getCmd(null,'totalSpeed');
         if (is_object($totalSpeed)) {
 			$newSpeed = round(($JdownloaderDatas['status']['data']['speed']/1000), 2);
-            if ($totalSpeed->formatValue(newSpeed) != $totalSpeed->execCmd()) {
+            if ($totalSpeed->formatValue($newSpeed) != $totalSpeed->execCmd()) {
                 $totalSpeed->setCollectDate('');
-                $totalSpeed->event(newSpeed);
+                $totalSpeed->event($newSpeed);
             }
         }
 		$state = $this->getCmd(null, "state");

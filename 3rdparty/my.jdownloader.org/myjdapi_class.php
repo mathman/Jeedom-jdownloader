@@ -163,6 +163,14 @@ class MYJDAPI
         }
         return $res;
     }
+	
+	public function isUpdateAvailable($deviceId) {
+        $res = $this -> callAction( "/update/isUpdateAvailable", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
 
     // Enumerate Devices connected to my.jdownloader.org
     // return: devices or false

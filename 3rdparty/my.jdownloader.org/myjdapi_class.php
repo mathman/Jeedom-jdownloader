@@ -171,6 +171,14 @@ class MYJDAPI
         }
         return $res;
     }
+	
+	public function getStatusToolbar($deviceId) {
+        $res = $this -> callAction( "/toolbar/getStatus", $deviceId);
+        if( $res === false) {
+            return false;
+        }
+        return $res;
+    }
 
     // Enumerate Devices connected to my.jdownloader.org
     // return: devices or false

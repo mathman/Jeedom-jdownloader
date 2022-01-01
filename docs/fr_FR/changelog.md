@@ -7,6 +7,9 @@
 # 01/01/2022
 
 - Ajout de l'information "Mise à jour disponible"
+- Ajout du status de l'instance
+
+Cliquez sur Synchronier dans la page de gestion du plugin afin de creer les nouvelles commandes
 
 # 15/09/2021
 

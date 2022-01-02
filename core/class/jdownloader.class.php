@@ -198,6 +198,51 @@ class jdownloader extends eqLogic {
         $linkDownloadNb->setTemplate('mobile', 'line');
         $linkDownloadNb->setOrder(9);
         $linkDownloadNb->save();
+		
+		$completeDownload = $this->getCmd(null, "completeDownload");
+        if (!is_object($completeDownload)) {
+            $completeDownload = new jdownloaderCmd();
+        }
+        $completeDownload->setName("Total à télécharger");
+        $completeDownload->setEqLogic_id($this->getId());
+        $completeDownload->setLogicalId("completeDownload");
+        $completeDownload->setType('info');
+        $completeDownload->setSubType('numeric');
+        $completeDownload->setUnite("MB");
+        $completeDownload->setTemplate('dashboard', 'line');
+        $completeDownload->setTemplate('mobile', 'line');
+        $completeDownload->setOrder(10);
+        $completeDownload->save();
+		
+		$currentDownload = $this->getCmd(null, "currentDownload");
+        if (!is_object($currentDownload)) {
+            $currentDownload = new jdownloaderCmd();
+        }
+        $currentDownload->setName("Total téléchargé");
+        $currentDownload->setEqLogic_id($this->getId());
+        $currentDownload->setLogicalId("currentDownload");
+        $currentDownload->setType('info');
+        $currentDownload->setSubType('numeric');
+        $currentDownload->setUnite("MB");
+        $currentDownload->setTemplate('dashboard', 'line');
+        $currentDownload->setTemplate('mobile', 'line');
+        $currentDownload->setOrder(11);
+        $currentDownload->save();
+		
+		$percentDownload = $this->getCmd(null, "percentDownload");
+        if (!is_object($percentDownload)) {
+            $percentDownload = new jdownloaderCmd();
+        }
+        $percentDownload->setName("Pourcentage téléchargé");
+        $percentDownload->setEqLogic_id($this->getId());
+        $percentDownload->setLogicalId("percentDownload");
+        $percentDownload->setType('info');
+        $percentDownload->setSubType('numeric');
+        $percentDownload->setUnite("%");
+        $percentDownload->setTemplate('dashboard', 'line');
+        $percentDownload->setTemplate('mobile', 'line');
+        $percentDownload->setOrder(12);
+        $percentDownload->save();
         
         $totalSpeed = $this->getCmd(null, "totalSpeed");
         if (!is_object($totalSpeed)) {
@@ -211,7 +256,7 @@ class jdownloader extends eqLogic {
         $totalSpeed->setUnite("ko/s");
         $totalSpeed->setTemplate('dashboard', 'line');
         $totalSpeed->setTemplate('mobile', 'line');
-        $totalSpeed->setOrder(10);
+        $totalSpeed->setOrder(13);
         $totalSpeed->save();
 		
 		$state = $this->getCmd(null, "state");
@@ -223,7 +268,7 @@ class jdownloader extends eqLogic {
         $state->setLogicalId("state");
         $state->setType('info');
         $state->setSubType('string');
-        $state->setOrder(11);
+        $state->setOrder(14);
         $state->save();
 
         $start = $this->getCmd(null,'start');
@@ -235,7 +280,7 @@ class jdownloader extends eqLogic {
         $start->setLogicalId("start");
         $start->setType('action');
         $start->setSubType('other');
-        $start->setOrder(12);
+        $start->setOrder(15);
         $start->setDisplay('icon', '<i class="fas fa-play"></i>');
         $start->setDisplay('showIconAndNamedashboard', '1');
         $start->setDisplay('showIconAndNamemobile', '1');
@@ -250,7 +295,7 @@ class jdownloader extends eqLogic {
         $stop->setLogicalId("stop");
         $stop->setType('action');
         $stop->setSubType('other');
-        $stop->setOrder(13);
+        $stop->setOrder(16);
         $stop->setDisplay('icon', '<i class="fas fa-stop"></i>');
         $stop->setDisplay('showIconAndNamedashboard', '1');
         $stop->setDisplay('showIconAndNamemobile', '1');
@@ -265,7 +310,7 @@ class jdownloader extends eqLogic {
         $pause->setLogicalId("pause");
         $pause->setType('action');
         $pause->setSubType('other');
-        $pause->setOrder(14);
+        $pause->setOrder(17);
         $pause->setDisplay('icon', '<i class="fas fa-pause"></i>');
         $pause->setDisplay('showIconAndNamedashboard', '1');
         $pause->setDisplay('showIconAndNamemobile', '1');
@@ -281,7 +326,7 @@ class jdownloader extends eqLogic {
         $package->setType('info');
         $package->setSubType('string');
         $package->setIsVisible(0);
-        $package->setOrder(15);
+        $package->setOrder(18);
         $package->save();
         
         $packageList = $this->getCmd(null,'packageList');
@@ -294,7 +339,7 @@ class jdownloader extends eqLogic {
         $packageList->setType('action');
         $packageList->setSubType('select');
         $packageList->setValue($this->getCmd(null,'package')->getId());
-        $packageList->setOrder(16);
+        $packageList->setOrder(19);
         $packageList->save();
         
         /* *****Commandes package***** */
@@ -309,7 +354,7 @@ class jdownloader extends eqLogic {
         $enabledPackage->setSubType('binary');
         $enabledPackage->setTemplate('dashboard', 'line');
         $enabledPackage->setTemplate('mobile', 'line');
-        $enabledPackage->setOrder(17);
+        $enabledPackage->setOrder(20);
         $enabledPackage->save();
         
         $enablePackage = $this->getCmd(null,'enablePackage');
@@ -324,7 +369,7 @@ class jdownloader extends eqLogic {
         $enablePackage->setDisplay('icon', '<i class="fas fa-check"></i>');
         $enablePackage->setDisplay('showIconAndNamedashboard', '1');
         $enablePackage->setDisplay('showIconAndNamemobile', '1');
-        $enablePackage->setOrder(18);
+        $enablePackage->setOrder(21);
         $enablePackage->save();
         
         $disablePackage = $this->getCmd(null,'disablePackage');
@@ -339,7 +384,7 @@ class jdownloader extends eqLogic {
         $disablePackage->setDisplay('icon', '<i class="fas fa-times"></i>');
         $disablePackage->setDisplay('showIconAndNamedashboard', '1');
         $disablePackage->setDisplay('showIconAndNamemobile', '1');
-        $disablePackage->setOrder(19);
+        $disablePackage->setOrder(22);
         $disablePackage->save();
 
         $bytesTotalPackage = $this->getCmd(null,'bytesTotalPackage');
@@ -354,7 +399,7 @@ class jdownloader extends eqLogic {
         $bytesTotalPackage->setUnite("MB");
         $bytesTotalPackage->setTemplate('dashboard', 'line');
         $bytesTotalPackage->setTemplate('mobile', 'line');
-        $bytesTotalPackage->setOrder(20);
+        $bytesTotalPackage->setOrder(23);
         $bytesTotalPackage->save();
         
         $bytesLoadedPackage = $this->getCmd(null,'bytesLoadedPackage');
@@ -369,7 +414,7 @@ class jdownloader extends eqLogic {
         $bytesLoadedPackage->setUnite("MB");
         $bytesLoadedPackage->setTemplate('dashboard', 'line');
         $bytesLoadedPackage->setTemplate('mobile', 'line');
-        $bytesLoadedPackage->setOrder(21);
+        $bytesLoadedPackage->setOrder(24);
         $bytesLoadedPackage->save();
         
         $progressPackage = $this->getCmd(null,'progressPackage');
@@ -384,7 +429,7 @@ class jdownloader extends eqLogic {
         $progressPackage->setUnite("%");
         $progressPackage->setTemplate('dashboard', 'line');
         $progressPackage->setTemplate('mobile', 'line');
-        $progressPackage->setOrder(22);
+        $progressPackage->setOrder(25);
         $progressPackage->save();
         
         $saveToPackage = $this->getCmd(null,'saveToPackage');
@@ -396,7 +441,7 @@ class jdownloader extends eqLogic {
         $saveToPackage->setLogicalId("saveToPackage");
         $saveToPackage->setType('info');
         $saveToPackage->setSubType('string');
-        $saveToPackage->setOrder(23);
+        $saveToPackage->setOrder(26);
         $saveToPackage->save();
         
         $hostsPackage = $this->getCmd(null,'hostsPackage');
@@ -408,7 +453,7 @@ class jdownloader extends eqLogic {
         $hostsPackage->setLogicalId("hostsPackage");
         $hostsPackage->setType('info');
         $hostsPackage->setSubType('string');
-        $hostsPackage->setOrder(24);
+        $hostsPackage->setOrder(27);
         $hostsPackage->save();
         
         $childCountPackage = $this->getCmd(null,'childCountPackage');
@@ -422,7 +467,7 @@ class jdownloader extends eqLogic {
         $childCountPackage->setSubType('numeric');
         $childCountPackage->setTemplate('dashboard', 'line');
         $childCountPackage->setTemplate('mobile', 'line');
-        $childCountPackage->setOrder(25);
+        $childCountPackage->setOrder(28);
         $childCountPackage->save();
         
         $onlineCountPackage = $this->getCmd(null,'onlineCountPackage');
@@ -436,7 +481,7 @@ class jdownloader extends eqLogic {
         $onlineCountPackage->setSubType('numeric');
         $onlineCountPackage->setTemplate('dashboard', 'line');
         $onlineCountPackage->setTemplate('mobile', 'line');
-        $onlineCountPackage->setOrder(26);
+        $onlineCountPackage->setOrder(29);
         $onlineCountPackage->save();
         
         $offlineCountPackage = $this->getCmd(null,'offlineCountPackage');
@@ -450,7 +495,7 @@ class jdownloader extends eqLogic {
         $offlineCountPackage->setSubType('numeric');
         $offlineCountPackage->setTemplate('dashboard', 'line');
         $offlineCountPackage->setTemplate('mobile', 'line');
-        $offlineCountPackage->setOrder(27);
+        $offlineCountPackage->setOrder(30);
         $offlineCountPackage->save();
         
         $unknownCountPackage = $this->getCmd(null,'unknownCountPackage');
@@ -464,7 +509,7 @@ class jdownloader extends eqLogic {
         $unknownCountPackage->setSubType('numeric');
         $unknownCountPackage->setTemplate('dashboard', 'line');
         $unknownCountPackage->setTemplate('mobile', 'line');
-        $unknownCountPackage->setOrder(28);
+        $unknownCountPackage->setOrder(31);
         $unknownCountPackage->save();
         
         $speedPackage = $this->getCmd(null,'speedPackage');
@@ -479,7 +524,7 @@ class jdownloader extends eqLogic {
         $speedPackage->setUnite("ko/s");
         $speedPackage->setTemplate('dashboard', 'line');
         $speedPackage->setTemplate('mobile', 'line');
-        $speedPackage->setOrder(29);
+        $speedPackage->setOrder(32);
         $speedPackage->save();
         
         $statusPackage = $this->getCmd(null,'statusPackage');
@@ -491,7 +536,7 @@ class jdownloader extends eqLogic {
         $statusPackage->setLogicalId("statusPackage");
         $statusPackage->setType('info');
         $statusPackage->setSubType('string');
-        $statusPackage->setOrder(30);
+        $statusPackage->setOrder(33);
         $statusPackage->save();
         
         $runningPackage = $this->getCmd(null,'runningPackage');
@@ -505,7 +550,7 @@ class jdownloader extends eqLogic {
         $runningPackage->setSubType('binary');
         $runningPackage->setTemplate('dashboard', 'line');
         $runningPackage->setTemplate('mobile', 'line');
-        $runningPackage->setOrder(31);
+        $runningPackage->setOrder(34);
         $runningPackage->save();
         
         $forceDownloadPackage = $this->getCmd(null,'forceDownloadPackage');
@@ -521,7 +566,7 @@ class jdownloader extends eqLogic {
         $forceDownloadPackage->setDisplay('showIconAndNamedashboard', '1');
         $forceDownloadPackage->setDisplay('showIconAndNamemobile', '1');
         $forceDownloadPackage->setDisplay('forceReturnLineAfter', '1');
-        $forceDownloadPackage->setOrder(32);
+        $forceDownloadPackage->setOrder(35);
         $forceDownloadPackage->save();
         
         $moveToDownloadListPackage = $this->getCmd(null,'moveToDownloadListPackage');
@@ -538,7 +583,7 @@ class jdownloader extends eqLogic {
         $moveToDownloadListPackage->setDisplay('showIconAndNamedashboard', '1');
         $moveToDownloadListPackage->setDisplay('showIconAndNamemobile', '1');
         $moveToDownloadListPackage->setDisplay('forceReturnLineAfter', '1');
-        $moveToDownloadListPackage->setOrder(33);
+        $moveToDownloadListPackage->setOrder(36);
         $moveToDownloadListPackage->save();
         
         $removePackage = $this->getCmd(null,'removePackage');
@@ -555,7 +600,7 @@ class jdownloader extends eqLogic {
         $removePackage->setDisplay('showIconAndNamedashboard', '1');
         $removePackage->setDisplay('showIconAndNamemobile', '1');
         $removePackage->setDisplay('forceReturnLineAfter', '1');
-        $removePackage->setOrder(34);
+        $removePackage->setOrder(37);
         $removePackage->save();
         
         $linkPackage = $this->getCmd(null,'linkPackage');
@@ -568,7 +613,7 @@ class jdownloader extends eqLogic {
         $linkPackage->setType('info');
         $linkPackage->setSubType('string');
         $linkPackage->setIsVisible(0);
-        $linkPackage->setOrder(35);
+        $linkPackage->setOrder(38);
         $linkPackage->save();
         
         $linkListPackage = $this->getCmd(null,'linkListPackage');
@@ -581,7 +626,7 @@ class jdownloader extends eqLogic {
         $linkListPackage->setType('action');
         $linkListPackage->setSubType('select');
         $linkListPackage->setValue($this->getCmd(null,'linkPackage')->getId());
-        $linkListPackage->setOrder(36);
+        $linkListPackage->setOrder(39);
         $linkListPackage->save();
 
         /* *****Commandes links***** */
@@ -596,7 +641,7 @@ class jdownloader extends eqLogic {
         $enabledLink->setSubType('binary');
         $enabledLink->setTemplate('dashboard', 'line');
         $enabledLink->setTemplate('mobile', 'line');
-        $enabledLink->setOrder(37);
+        $enabledLink->setOrder(40);
         $enabledLink->save();
         
         $enableLink = $this->getCmd(null,'enableLink');
@@ -611,7 +656,7 @@ class jdownloader extends eqLogic {
         $enableLink->setDisplay('icon', '<i class="fas fa-check"></i>');
         $enableLink->setDisplay('showIconAndNamedashboard', '1');
         $enableLink->setDisplay('showIconAndNamemobile', '1');
-        $enableLink->setOrder(38);
+        $enableLink->setOrder(41);
         $enableLink->save();
         
         $disableLink = $this->getCmd(null,'disableLink');
@@ -626,7 +671,7 @@ class jdownloader extends eqLogic {
         $disableLink->setDisplay('icon', '<i class="fas fa-times"></i>');
         $disableLink->setDisplay('showIconAndNamedashboard', '1');
         $disableLink->setDisplay('showIconAndNamemobile', '1');
-        $disableLink->setOrder(39);
+        $disableLink->setOrder(42);
         $disableLink->save();
         
         $addedDateLink = $this->getCmd(null,'addedDateLink');
@@ -638,7 +683,7 @@ class jdownloader extends eqLogic {
         $addedDateLink->setLogicalId("addedDateLink");
         $addedDateLink->setType('info');
         $addedDateLink->setSubType('string');
-        $addedDateLink->setOrder(40);
+        $addedDateLink->setOrder(43);
         $addedDateLink->save();
         
         $bytesTotalLink = $this->getCmd(null,'bytesTotalLink');
@@ -653,7 +698,7 @@ class jdownloader extends eqLogic {
         $bytesTotalLink->setUnite("MB");
         $bytesTotalLink->setTemplate('dashboard', 'line');
         $bytesTotalLink->setTemplate('mobile', 'line');
-        $bytesTotalLink->setOrder(41);
+        $bytesTotalLink->setOrder(44);
         $bytesTotalLink->save();
         
         $bytesLoadedLink = $this->getCmd(null,'bytesLoadedLink');
@@ -668,7 +713,7 @@ class jdownloader extends eqLogic {
         $bytesLoadedLink->setUnite("MB");
         $bytesLoadedLink->setTemplate('dashboard', 'line');
         $bytesLoadedLink->setTemplate('mobile', 'line');
-        $bytesLoadedLink->setOrder(42);
+        $bytesLoadedLink->setOrder(45);
         $bytesLoadedLink->save();
         
         $progressLink = $this->getCmd(null,'progressLink');
@@ -683,7 +728,7 @@ class jdownloader extends eqLogic {
         $progressLink->setUnite("%");
         $progressLink->setTemplate('dashboard', 'line');
         $progressLink->setTemplate('mobile', 'line');
-        $progressLink->setOrder(43);
+        $progressLink->setOrder(46);
         $progressLink->save();
         
         $hostLink = $this->getCmd(null,'hostLink');
@@ -695,7 +740,7 @@ class jdownloader extends eqLogic {
         $hostLink->setLogicalId("hostLink");
         $hostLink->setType('info');
         $hostLink->setSubType('string');
-        $hostLink->setOrder(44);
+        $hostLink->setOrder(47);
         $hostLink->save();
         
         $urlLink = $this->getCmd(null,'urlLink');
@@ -707,7 +752,7 @@ class jdownloader extends eqLogic {
         $urlLink->setLogicalId("urlLink");
         $urlLink->setType('info');
         $urlLink->setSubType('string');
-        $urlLink->setOrder(45);
+        $urlLink->setOrder(48);
         $urlLink->save();
         
         $availabilityLink = $this->getCmd(null,'availabilityLink');
@@ -719,7 +764,7 @@ class jdownloader extends eqLogic {
         $availabilityLink->setLogicalId("availabilityLink");
         $availabilityLink->setType('info');
         $availabilityLink->setSubType('string');
-        $availabilityLink->setOrder(46);
+        $availabilityLink->setOrder(49);
         $availabilityLink->save();
         
         $speedLink = $this->getCmd(null,'speedLink');
@@ -734,7 +779,7 @@ class jdownloader extends eqLogic {
         $speedLink->setUnite("ko/s");
         $speedLink->setTemplate('dashboard', 'line');
         $speedLink->setTemplate('mobile', 'line');
-        $speedLink->setOrder(47);
+        $speedLink->setOrder(50);
         $speedLink->save();
         
         $statusLink = $this->getCmd(null,'statusLink');
@@ -746,7 +791,7 @@ class jdownloader extends eqLogic {
         $statusLink->setLogicalId("statusLink");
         $statusLink->setType('info');
         $statusLink->setSubType('string');
-        $statusLink->setOrder(48);
+        $statusLink->setOrder(51);
         $statusLink->save();
         
         $runningLink = $this->getCmd(null,'runningLink');
@@ -760,7 +805,7 @@ class jdownloader extends eqLogic {
         $runningLink->setSubType('binary');
         $runningLink->setTemplate('dashboard', 'line');
         $runningLink->setTemplate('mobile', 'line');
-        $runningLink->setOrder(49);
+        $runningLink->setOrder(52);
         $runningLink->save();
         
         $forceDownloadLink = $this->getCmd(null,'forceDownloadLink');
@@ -776,7 +821,7 @@ class jdownloader extends eqLogic {
         $forceDownloadLink->setDisplay('showIconAndNamedashboard', '1');
         $forceDownloadLink->setDisplay('showIconAndNamemobile', '1');
         $forceDownloadLink->setDisplay('forceReturnLineAfter', '1');
-        $forceDownloadLink->setOrder(50);
+        $forceDownloadLink->setOrder(53);
         $forceDownloadLink->save();
         
         $moveToDownloadListLink = $this->getCmd(null,'moveToDownloadListLink');
@@ -793,7 +838,7 @@ class jdownloader extends eqLogic {
         $moveToDownloadListLink->setDisplay('showIconAndNamedashboard', '1');
         $moveToDownloadListLink->setDisplay('showIconAndNamemobile', '1');
         $moveToDownloadListLink->setDisplay('forceReturnLineAfter', '1');
-        $moveToDownloadListLink->setOrder(51);
+        $moveToDownloadListLink->setOrder(54);
         $moveToDownloadListLink->save();
         
         $removeLink = $this->getCmd(null,'removeLink');
@@ -810,7 +855,7 @@ class jdownloader extends eqLogic {
         $removeLink->setDisplay('showIconAndNamedashboard', '1');
         $removeLink->setDisplay('showIconAndNamemobile', '1');
         $removeLink->setDisplay('forceReturnLineAfter', '1');
-        $removeLink->setOrder(52);
+        $removeLink->setOrder(55);
         $removeLink->save();
     }
     
@@ -1211,6 +1256,30 @@ class jdownloader extends eqLogic {
             if ($linkDownloadNb->formatValue(count($JdownloaderDatas['linksDownload']['data'])) != $linkDownloadNb->execCmd()) {
                 $linkDownloadNb->setCollectDate('');
                 $linkDownloadNb->event(count($JdownloaderDatas['linksDownload']['data']));
+            }
+        }
+		$completeDownload = $this->getCmd(null,'completeDownload');
+        if (is_object($completeDownload)) {
+			$newCompleteTotal = round(($JdownloaderDatas['status']['data']['download_complete']/1000000), 2);
+            if ($completeDownload->formatValue($newCompleteTotal) != $completeDownload->execCmd()) {
+                $completeDownload->setCollectDate('');
+                $completeDownload->event($newCompleteTotal);
+            }
+        }
+		$currentDownload = $this->getCmd(null,'currentDownload');
+        if (is_object($currentDownload)) {
+			$newCurrentTotal = round(($JdownloaderDatas['status']['data']['download_current']/1000000), 2);
+            if ($currentDownload->formatValue($newCurrentTotal) != $currentDownload->execCmd()) {
+                $currentDownload->setCollectDate('');
+                $currentDownload->event($newCurrentTotal);
+            }
+        }
+		$percentDownload = $this->getCmd(null,'percentDownload');
+        if (is_object($percentDownload)) {
+			$newPercent = round((($JdownloaderDatas['status']['data']['download_current']*100)/$JdownloaderDatas['status']['data']['download_complete']), 2);
+            if ($percentDownload->formatValue($newPercent) != $percentDownload->execCmd()) {
+                $percentDownload->setCollectDate('');
+                $percentDownload->event($newPercent);
             }
         }
         $totalSpeed = $this->getCmd(null,'totalSpeed');

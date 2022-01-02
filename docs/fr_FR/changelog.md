@@ -4,6 +4,12 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 02/01/2022
+
+- Ajout du total téléchargé et du total à télécharger
+
+Cliquez sur Synchronier dans la page de gestion du plugin afin de creer les nouvelles commandes
+
 # 01/01/2022
 
 - Ajout de l'information "Mise à jour disponible"

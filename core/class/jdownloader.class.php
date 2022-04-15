@@ -857,6 +857,19 @@ class jdownloader extends eqLogic {
         $removeLink->setDisplay('forceReturnLineAfter', '1');
         $removeLink->setOrder(55);
         $removeLink->save();
+		
+		$addLink = $this->getCmd(null,'addLink');
+        if (!is_object($addLink)) {
+            $addLink = new jdownloaderCmd();
+        }
+        $addLink->setName("Ajouter lien");
+        $addLink->setEqLogic_id($this->getId());
+        $addLink->setLogicalId("addLink");
+        $addLink->setType('action');
+        $addLink->setSubType('message');
+        $addLink->setDisplay('parameters', array("title_placeholder" => "Nom du paquet (facultatif)", "message_placeholder" => "Lien de téléchargement"));
+        $addLink->setOrder(56);
+        $addLink->save();
     }
     
     function getAllFromJdownloader() {
@@ -1126,6 +1139,17 @@ class jdownloader extends eqLogic {
                     return $remove;
                 }
             }
+        }
+        return null;
+    }
+	
+	function addLink($package, $link) {
+        if ($link !== '') {
+			$j = new MYJDAPI( config::byKey('username', 'jdownloader', ''), config::byKey('password', 'jdownloader', ''));
+			$add = $j->addLinks($this->getLogicalId(), array("links" => $link, "autostart" => false, "packageName" => $package));
+			$j->disconnect();
+			log::add('jdownloader', 'debug', print_r($add, true));
+			return $add;
         }
         return null;
     }
@@ -1655,6 +1679,7 @@ class jdownloader extends eqLogic {
     
     public function updateDeviceInfos() {
         $JdownloaderDatas = $this->getAllFromJdownloader();
+		log::add('somfy', 'debug', 'Device infos: ' . print_r($JdownloaderDatas));
         $this->updateDeviceCmds($JdownloaderDatas);
         $package = $this->getCmd(null,'package');
         if (is_object($package)) {
@@ -1913,6 +1938,10 @@ class jdownloaderCmd extends cmd {
                 return true;
             case "removeLink":
                 $eqLogic->removeLink();
+                $eqLogic->updateDeviceInfos();
+                return true;
+			case "addLink":
+                $eqLogic->addLink($_options['title'], $_options['message']);
                 $eqLogic->updateDeviceInfos();
                 return true;
             default:

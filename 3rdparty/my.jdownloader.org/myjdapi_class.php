@@ -206,15 +206,16 @@ class MYJDAPI
     // {"url":"/linkgrabberv2/addLinks",
     //  "params":["{\"priority\":\"DEFAULT\",\"links\":\"YOURLINK\",\"autostart\":autostart, \"packageName\": \"YOURPKGNAME\"}"],
     //  "rid":YOURREQUESTID,"apiVer":1}
-    public function addLinks( $links, $deviceId, $autostart, $package_name = null) {
-        if( is_array( $links)) {
-            $links = implode( ",", $links);
-        }
-        $params = '\"priority\":\"DEFAULT\",\"links\":\"'.$links.'\",\"autostart\":\"'.$autostart.'\", \"packageName\": \"'.$package_name.'\"';
-        $res = $this -> callAction( "/linkgrabberv2/addLinks", $deviceId, $params);
-        if( $res === false) {
-            return false;
-        }
+    public function addLinks($deviceId, $params = []) {
+		$params_default = [
+            "priority" => "DEFAULT"
+        ];
+		
+		$params = array_merge( $params_default, $params);
+        $params = str_replace('"', '\"', substr(json_encode($params),1,-1));
+        $json_params = '"{'.$params.'}"';
+		
+		$res = $this -> callAction( "/linkgrabberv2/addLinks", $deviceId, $json_params);
         return $res;
     }
 

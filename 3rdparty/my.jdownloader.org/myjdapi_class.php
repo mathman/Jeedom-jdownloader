@@ -382,6 +382,8 @@ class MYJDAPI
     // input: query - path+params, key - key for encryption, params - additional params
     // return: result from server or false
     private function callServer( $query, $key, $params = false) {
+		log::add('jdownloader', 'debug', 'Call server');
+		log::add('jdownloader', 'debug', 'Query ' . $query);
         if( $params != "") {
             if( $key != "") {
                 $params = $this -> encrypt( $params, $key);
@@ -395,11 +397,13 @@ class MYJDAPI
         $signature = $this -> sign( $key, $query);
         $query = $query."&signature=".$signature;
         $url = $this -> api_url.$query;
+		log::add('jdownloader', 'debug', 'Start post query with url ' . $url);
         if( $params != "") {
             $res = $this -> postQuery( $url, $params, $key);
         } else {
             $res = $this -> postQuery( $url, "", $key);
         }
+		log::add('jdownloader', 'debug', 'End post query with res ' . print_r($res, true));
         if( $res === false) {
             return false;
         }
@@ -414,15 +418,20 @@ class MYJDAPI
     // input: device_name - name of device to send action, action - action pathname, params - additional params
     // return: result from server or false
     public function callAction( $action, $deviceId, $params = "") {
+		log::add('jdownloader', 'debug', 'Call action');
         $query = "/t_".urlencode( $this -> sessiontoken)."_".urlencode( $deviceId).$action;
+		log::add('jdownloader', 'debug', 'Query ' . $query);
         if( $params !== "") {
             $json_data = '{"url":"'.$action.'","params":['.$params.'],"rid":'.$this -> getUniqueRid().',"apiVer":'.$this -> apiVer.'}';
         } else {
             $json_data = '{"url":"'.$action.'","rid":'.$this -> getUniqueRid().',"apiVer":'.$this -> apiVer.'}';
         }
+		log::add('jdownloader', 'debug', 'Json ' . $json_data);
         $json_data = $this -> encrypt( $json_data, $this -> deviceEncryptionToken);
         $url = $this -> api_url.$query;
+		log::add('jdownloader', 'debug', 'Start post query with url ' . $url);
         $res = $this -> postQuery( $url, $json_data, $this -> deviceEncryptionToken);
+		log::add('jdownloader', 'debug', 'End post query with res ' . print_r($res, true));
         if( $res === false) {
             return false;
         }
@@ -485,9 +494,12 @@ class MYJDAPI
             curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
         }
         $response = array();
+		log::add('jdownloader', 'debug', 'Start request');
         $response["text"] = curl_exec( $ch);
+		log::add('jdownloader', 'debug', 'End request');
         $response["info"] = curl_getinfo( $ch);
         $response["code"] = $response["info"]["http_code"];
+		log::add('jdownloader', 'debug', 'Response ' . print_r($response, true));
         if( $response["code"] != 200) {
             return false;
         }

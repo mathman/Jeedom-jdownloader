@@ -1,0 +1,245 @@
+<div class="eqLogic eqLogic-widget text-center allowResize jd-widget #custom_layout# #eqLogic_class# #class# #category#"
+     data-eqType="#eqType#"
+     data-eqLogic_id="#id#"
+     data-eqLogic_uid="#uid#"
+     data-version="#version#"
+     data-translate-category="#translate_category#"
+     data-category="#category#"
+     data-tags="#tags#"
+     style="width:#width#;height:#height#;#style#">
+  <style>
+    .jd-widget{
+      box-sizing:border-box; overflow:visible; padding:0 !important; border-radius:10px;
+      background:rgba(120,120,120,.05); position:relative;
+    }
+    .jd-widget .widget-name{
+      border-radius:10px 10px 0 0;
+    }
+    .jd-widget .jd-body{
+      padding:12px;
+    }
+    .jd-widget .jd-badge{ display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; margin-bottom:6px; }
+    .jd-widget .jd-badge-warn{ background:rgba(255,193,7,.18); color:#e0a030; }
+    .jd-widget .jd-state{ font-size:10px; opacity:.7; margin-bottom:10px; }
+
+    .jd-widget .jd-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:10px; font-size:10px;
+    }
+    .jd-widget .jd-box{ background:rgba(120,120,120,.10); border-radius:6px; padding:5px 3px; text-align:center; }
+    .jd-widget .jd-box-label{ font-size:9px; opacity:.7; margin-bottom:2px; }
+    .jd-widget .jd-box-value{ font-size:12px; font-weight:700; }
+
+    .jd-widget .jd-bar-bg{ background:rgba(120,120,120,.18); border-radius:6px; height:8px; overflow:hidden; margin-bottom:10px; }
+    .jd-widget .jd-bar-fill{ background:linear-gradient(90deg,#17a2b8,#28a745); height:100%; border-radius:6px; }
+
+    .jd-widget .jd-controls{ display:flex; justify-content:center; gap:6px; margin-bottom:10px; }
+    .jd-widget .jd-ctrl-btn{
+      flex:1; text-align:center; padding:6px 2px; border-radius:8px; cursor:pointer;
+      background:rgba(120,120,120,.12); font-size:14px;
+    }
+    .jd-widget .jd-ctrl-btn:hover{ background:rgba(120,120,120,.22); }
+
+    .jd-widget select.jd-select{
+      width:100%; padding:6px; border-radius:6px; font-size:12px;
+      background:rgba(120,120,120,.10); border:1px solid rgba(120,120,120,.25); color:inherit;
+    }
+
+    .jd-widget .jd-overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.5);
+      z-index:9999; align-items:center; justify-content:center; padding:20px;
+    }
+    .jd-widget .jd-modal{
+      background:#f4f4f4; color:#222; border-radius:12px; padding:16px;
+      max-width:420px; width:100%; max-height:85vh; overflow:auto; position:relative;
+      box-shadow:0 10px 40px rgba(0,0,0,.4);
+    }
+    .jd-widget .jd-modal-close{ position:absolute; top:10px; right:12px; cursor:pointer; font-size:18px; opacity:.6; }
+    .jd-widget .jd-modal-close:hover{ opacity:1; }
+    .jd-widget .jd-modal-title{ font-size:15px; font-weight:700; margin-bottom:12px; padding-right:24px; word-break:break-word; }
+
+    .jd-widget .jd-row{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px; gap:8px; }
+    .jd-widget .jd-row span:last-child{ font-weight:600; text-align:right; word-break:break-word; }
+
+    .jd-widget .jd-actions{ display:flex; flex-wrap:wrap; gap:6px; margin:10px 0; }
+    .jd-widget .jd-action-btn{
+      flex:1; min-width:80px; text-align:center; padding:6px 4px; border-radius:8px; cursor:pointer;
+      background:rgba(120,120,120,.12); font-size:11px; font-weight:600;
+    }
+    .jd-widget .jd-action-btn:hover{ background:rgba(120,120,120,.22); }
+    .jd-widget .jd-action-danger{ color:#dc3545; }
+
+    .jd-widget .jd-sep{ border-top:1px solid rgba(120,120,120,.2); margin:12px 0; padding-top:12px; }
+    .jd-widget .jd-sep-title{ font-size:12px; font-weight:700; opacity:.8; margin-bottom:8px; }
+  </style>
+
+  <div class="widget-name">
+    <span style="color:#background-color#" title="#alert_name#">
+      <i class='#alert_icon#'></i>
+    </span>
+    <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
+      <i class="fas fa-sync"></i>
+    </span>
+    <span class="panelLink pull-left cursor">
+      <a href="#panelLink#"><i class="fas fa-external-link-alt"></i></a>
+    </span>
+    <span class="reportModeVisible">#name_display# <span class="object_name">#object_name#</span></span>
+    <a href="#eqLink#" class="reportModeHidden">#name_display# <span class="object_name">#object_name#</span></a>
+  </div>
+  <script>
+    if ('#panelLink#' == '') {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .panelLink')?.remove()
+    }
+    if ('#refresh_id#' != '') {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh')?.addEventListener('click', function() {
+        jeedom.cmd.execute({ id: '#refresh_id#' })
+      })
+    } else {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh')?.remove()
+    }
+  </script>
+
+  <div class="jd-body">
+  #update_available#
+  <div class="jd-state">État : #state#</div>
+
+  <div class="jd-grid">
+    <div class="jd-box">
+      <div class="jd-box-label">📦 Paquets attente</div>
+      <div class="jd-box-value #packageCollectorNb_history_class#" data-cmd_id="#packageCollectorNb_id#">#packageCollectorNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">📦 Paquets DL</div>
+      <div class="jd-box-value #packageDownloadNb_history_class#" data-cmd_id="#packageDownloadNb_id#">#packageDownloadNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">🔗 Liens attente</div>
+      <div class="jd-box-value #linkCollectorNb_history_class#" data-cmd_id="#linkCollectorNb_id#">#linkCollectorNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">🔗 Liens DL</div>
+      <div class="jd-box-value #linkDownloadNb_history_class#" data-cmd_id="#linkDownloadNb_id#">#linkDownloadNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">⬇️ Vitesse</div>
+      <div class="jd-box-value #totalSpeed_history_class#" data-cmd_id="#totalSpeed_id#">#totalSpeed# ko/s</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">📊 Progression</div>
+      <div class="jd-box-value #percentDownload_history_class#" data-cmd_id="#percentDownload_id#">#percentDownload#%</div>
+    </div>
+  </div>
+
+  <div class="jd-bar-bg"><div class="jd-bar-fill" style="width:#percentDownload_pct#%;"></div></div>
+
+  <div class="jd-controls">
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_start_id#" data-confirm="#confirm_start#" title="Démarrer">▶️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_pause_id#" data-confirm="#confirm_pause#" title="Pause">⏸️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_stop_id#" data-confirm="#confirm_stop#" title="Arrêter">⏹️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_restart_id#" data-confirm="#confirm_restart#" title="Redémarrer">🔁</div>
+  </div>
+
+  <select class="jd-select jd-package-select" data-cmd_id="#cmd_packagelist_id#">
+    #package_options#
+  </select>
+
+  <!-- Popup détail paquet (contient aussi le sélecteur/détail de lien) -->
+  <div class="jd-overlay jd-package-overlay">
+    <div class="jd-modal">
+      <div class="jd-modal-close">✕</div>
+      <div class="jd-modal-title jd-package-title">Paquet</div>
+
+      <div class="jd-bar-bg" style="#progress_package_style#"><div class="jd-bar-fill" style="width:#progressPackage_pct#%;"></div></div>
+      #package_rows#
+
+      <div class="jd-actions">
+        <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_enablePackage_id#" style="#enablePackage_style#" data-confirm="#confirm_enablePackage#">✅ Activer</div>
+        <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_disablePackage_id#" style="#disablePackage_style#" data-confirm="#confirm_disablePackage#">🚫 Désactiver</div>
+        <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_forceDownloadPackage_id#" style="#forceDownloadPackage_style#" data-confirm="#confirm_forceDownloadPackage#">▶️ Forcer DL</div>
+        <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_moveToDownloadListPackage_id#" style="#moveToDownloadListPackage_style#" data-confirm="#confirm_moveToDownloadListPackage#">➡️ Vers téléchargements</div>
+        <div class="jd-action-btn jd-action-simple jd-action-danger" data-cmd_id="#cmd_removePackage_id#" style="#removePackage_style#" data-confirm="#confirm_removePackage#">🗑️ Supprimer</div>
+      </div>
+
+      <div class="jd-sep" style="#link_selector_style#">
+        <div class="jd-sep-title">🔗 Lien</div>
+        <select class="jd-select jd-link-select" data-cmd_id="#cmd_linklist_id#">
+          #link_options#
+        </select>
+
+        <div style="#link_details_style#; margin-top:10px;">
+          <div class="jd-bar-bg" style="#progress_link_style#"><div class="jd-bar-fill" style="width:#progressLink_pct#%;"></div></div>
+          #link_rows#
+
+          <div class="jd-actions">
+            <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_enableLink_id#" style="#enableLink_style#" data-confirm="#confirm_enableLink#">✅ Activer</div>
+            <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_disableLink_id#" style="#disableLink_style#" data-confirm="#confirm_disableLink#">🚫 Désactiver</div>
+            <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_forceDownloadLink_id#" style="#forceDownloadLink_style#" data-confirm="#confirm_forceDownloadLink#">▶️ Forcer DL</div>
+            <div class="jd-action-btn jd-action-simple" data-cmd_id="#cmd_moveToDownloadListLink_id#" style="#moveToDownloadListLink_style#" data-confirm="#confirm_moveToDownloadListLink#">➡️ Vers téléchargements</div>
+            <div class="jd-action-btn jd-action-simple jd-action-danger" data-cmd_id="#cmd_removeLink_id#" style="#removeLink_style#" data-confirm="#confirm_removeLink#">🗑️ Supprimer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var eqId = '#id#';
+  var ns = '.jd-' + eqId;
+  var sel = '.eqLogic-widget[data-eqlogic_id="' + eqId + '"]';
+  var hasPackageSelected = ('#package_details_style#' === '');
+  var openKey = 'jd_open_package_' + eqId;
+
+  function runAction($btn){
+    var id = $btn.data('cmd_id');
+    if (!id || id == 0) return;
+    if ($btn.data('confirm') == '1' && !confirm('Confirmer cette action ?')) return;
+    jeedom.cmd.execute({id: id});
+  }
+
+  $('body').off('click' + ns, sel + ' .jd-action-simple');
+  $('body').on('click' + ns, sel + ' .jd-action-simple', function(e){
+    e.preventDefault();
+    runAction($(this));
+  });
+
+  $('body').off('change' + ns, sel + ' .jd-package-select');
+  $('body').on('change' + ns, sel + ' .jd-package-select', function(){
+    var id = $(this).data('cmd_id');
+    var val = $(this).val();
+    if (!id || id == 0) return;
+    try { sessionStorage.setItem(openKey, Date.now()); } catch (e) {}
+    jeedom.cmd.execute({id: id, value: {select: val}});
+  });
+
+  $('body').off('change' + ns, sel + ' .jd-link-select');
+  $('body').on('change' + ns, sel + ' .jd-link-select', function(){
+    var id = $(this).data('cmd_id');
+    var val = $(this).val();
+    if (!id || id == 0) return;
+    try { sessionStorage.setItem(openKey, Date.now()); } catch (e) {}
+    jeedom.cmd.execute({id: id, value: {select: val}});
+  });
+
+  $('body').off('click' + ns, sel + ' .jd-modal-close');
+  $('body').on('click' + ns, sel + ' .jd-modal-close', function(){
+    $(this).closest('.jd-overlay').hide();
+  });
+  $('body').off('click' + ns, sel + ' .jd-overlay');
+  $('body').on('click' + ns, sel + ' .jd-overlay', function(e){
+    if (e.target === this) { $(this).hide(); }
+  });
+
+  // Réouvre le popup juste après une sélection utilisateur (fenêtre de 8s),
+  // pas lors des rafraîchissements automatiques en arrière-plan.
+  var lastOpen = 0;
+  try { lastOpen = parseInt(sessionStorage.getItem(openKey) || '0', 10); } catch (e) {}
+  if (hasPackageSelected && lastOpen && (Date.now() - lastOpen) < 8000) {
+    var $select = $(sel + ' .jd-package-select');
+    var title = $select.find('option:selected').text();
+    $(sel + ' .jd-package-title').text(title || 'Paquet');
+    $(sel + ' .jd-package-overlay').css('display', 'flex');
+  }
+})();
+</script>

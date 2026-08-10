@@ -1,0 +1,124 @@
+<div class="eqLogic eqLogic-widget text-center jd-widget-m #custom_layout# #eqLogic_class# #class# #category#"
+     data-eqType="#eqType#"
+     data-eqLogic_id="#id#"
+     data-eqLogic_uid="#uid#"
+     data-version="#version#"
+     data-translate-category="#translate_category#"
+     data-category="#category#"
+     data-tags="#tags#">
+  <style>
+    .jd-widget-m{
+      width:100% !important; box-sizing:border-box; padding:0 !important; border-radius:10px;
+      background:rgba(120,120,120,.05);
+    }
+    .jd-widget-m .widget-name{
+      border-radius:10px 10px 0 0;
+    }
+    .jd-widget-m .jd-body{
+      padding:16px;
+    }
+    .jd-widget-m .jd-badge{ display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px; margin-bottom:8px; }
+    .jd-widget-m .jd-badge-warn{ background:rgba(255,193,7,.18); color:#e0a030; }
+    .jd-widget-m .jd-state{ font-size:12px; opacity:.7; margin-bottom:12px; }
+
+    .jd-widget-m .jd-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; font-size:13px;
+    }
+    .jd-widget-m .jd-box{ background:rgba(120,120,120,.10); border-radius:10px; padding:10px 6px; text-align:center; }
+    .jd-widget-m .jd-box-label{ font-size:11px; opacity:.7; margin-bottom:3px; }
+    .jd-widget-m .jd-box-value{ font-size:16px; font-weight:700; }
+
+    .jd-widget-m .jd-bar-bg{ background:rgba(120,120,120,.18); border-radius:8px; height:10px; overflow:hidden; margin-bottom:14px; }
+    .jd-widget-m .jd-bar-fill{ background:linear-gradient(90deg,#17a2b8,#28a745); height:100%; border-radius:8px; }
+
+    .jd-widget-m .jd-controls{ display:flex; justify-content:center; gap:10px; }
+    .jd-widget-m .jd-ctrl-btn{
+      flex:1; text-align:center; padding:12px 4px; border-radius:12px; cursor:pointer;
+      background:rgba(120,120,120,.12); font-size:20px;
+    }
+  </style>
+
+  <div class="widget-name">
+    <span style="color:#background-color#" title="#alert_name#">
+      <i class='#alert_icon#'></i>
+    </span>
+    <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
+      <i class="fas fa-sync"></i>
+    </span>
+    <span class="panelLink pull-left cursor">
+      <a href="#panelLink#"><i class="fas fa-external-link-alt"></i></a>
+    </span>
+    <span class="reportModeVisible">#name_display# <span class="object_name">#object_name#</span></span>
+    <a href="#eqLink#" class="reportModeHidden">#name_display# <span class="object_name">#object_name#</span></a>
+  </div>
+  <script>
+    if ('#panelLink#' == '') {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .panelLink')?.remove()
+    }
+    if ('#refresh_id#' != '') {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh')?.addEventListener('click', function() {
+        jeedom.cmd.execute({ id: '#refresh_id#' })
+      })
+    } else {
+      document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh')?.remove()
+    }
+  </script>
+
+  <div class="jd-body">
+  #update_available#
+  <div class="jd-state">État : #state#</div>
+
+  <div class="jd-grid">
+    <div class="jd-box">
+      <div class="jd-box-label">📦 Paquets attente</div>
+      <div class="jd-box-value #packageCollectorNb_history_class#" data-cmd_id="#packageCollectorNb_id#">#packageCollectorNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">📦 Paquets DL</div>
+      <div class="jd-box-value #packageDownloadNb_history_class#" data-cmd_id="#packageDownloadNb_id#">#packageDownloadNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">🔗 Liens attente</div>
+      <div class="jd-box-value #linkCollectorNb_history_class#" data-cmd_id="#linkCollectorNb_id#">#linkCollectorNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">🔗 Liens DL</div>
+      <div class="jd-box-value #linkDownloadNb_history_class#" data-cmd_id="#linkDownloadNb_id#">#linkDownloadNb#</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">⬇️ Vitesse</div>
+      <div class="jd-box-value #totalSpeed_history_class#" data-cmd_id="#totalSpeed_id#">#totalSpeed# ko/s</div>
+    </div>
+    <div class="jd-box">
+      <div class="jd-box-label">📊 Progression</div>
+      <div class="jd-box-value #percentDownload_history_class#" data-cmd_id="#percentDownload_id#">#percentDownload#%</div>
+    </div>
+  </div>
+
+  <div class="jd-bar-bg"><div class="jd-bar-fill" style="width:#percentDownload_pct#%;"></div></div>
+
+  <div class="jd-controls">
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_start_id#" data-confirm="#confirm_start#" title="Démarrer">▶️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_pause_id#" data-confirm="#confirm_pause#" title="Pause">⏸️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_stop_id#" data-confirm="#confirm_stop#" title="Arrêter">⏹️</div>
+    <div class="jd-ctrl-btn jd-action-simple" data-cmd_id="#cmd_restart_id#" data-confirm="#confirm_restart#" title="Redémarrer">🔁</div>
+  </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var eqId = '#id#';
+  var ns = '.jdm-' + eqId;
+  var sel = '.eqLogic-widget[data-eqlogic_id="' + eqId + '"]';
+
+  $('body').off('click' + ns, sel + ' .jd-action-simple');
+  $('body').on('click' + ns, sel + ' .jd-action-simple', function(e){
+    e.preventDefault();
+    var id = $(this).data('cmd_id');
+    if (!id || id == 0) return;
+    if ($(this).data('confirm') == '1' && !confirm('Confirmer cette action ?')) return;
+    jeedom.cmd.execute({id: id});
+  });
+})();
+</script>
